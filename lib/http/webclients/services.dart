@@ -1,16 +1,18 @@
 import 'dart:convert';
 import 'package:app_sagem/http/webclient.dart';
-import 'package:app_sagem/models/Services.dart';
+import 'package:app_sagem/models/service.dart';
 import 'package:http/http.dart';
 
 class ServicesWebClient {
-  Future<List> findAll() async {
+  Future<List<Service>> findAll() async {
     final Response response =
         await client.get(Uri.parse(baseUrl)).timeout(Duration(seconds: 5));
 
     final List<dynamic> decodedJson = jsonDecode(response.body);
 
-    return decodedJson.map((dynamic json) => Service.fromJson(json)).toList();
+    return decodedJson
+        .map<Service>((dynamic json) => Service.fromJson(json))
+        .toList();
   }
 
   Future<Service> save(Service service, String password) async {
