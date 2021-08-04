@@ -107,6 +107,7 @@ class _CardServiceState extends State<CardService> {
         ),
       ),
       builder: (BuildContext context) {
+        value = null;
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
           return Padding(
