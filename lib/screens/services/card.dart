@@ -80,20 +80,7 @@ class _CardServiceState extends State<CardService> {
     );
   }
 
-  int value;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  setSelectedRadioTile(int val) {
-    setState(() {
-      print('aqui amigo $val e o value $value');
-      value = val;
-      print(value);
-    });
-  }
+  String groupValueRadioList;
 
   void _showModalBottomSheet(BuildContext context, Service service) {
     showModalBottomSheet(
@@ -107,55 +94,81 @@ class _CardServiceState extends State<CardService> {
         ),
       ),
       builder: (BuildContext context) {
-        value = null;
+        groupValueRadioList = null;
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
           return Padding(
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.30,
+              height: MediaQuery.of(context).size.height * 0.50,
               child: Column(
                 children: <Widget>[
                   TitleBottomSheet(title: service.title),
-                  Container(
-                    child: new Wrap(
-                      children: <Widget>[
-                        ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: service.employees.length,
-                          itemBuilder: (context, index) {
-                            print('To no index $index');
-                            return Theme(
-                              data: ThemeData(
-                                unselectedWidgetColor: Colors.amber[800],
-                              ),
-                              child: RadioListTile<int>(
-                                title: Text(service.employees[index].fullName),
-                                value: index,
-                                groupValue: value,
-                                onChanged: (int choice) {
-                                  setState(() {
-                                    value = choice;
-                                  });
-                                },
-                                selected: value == index,
-                                toggleable: true,
-                                subtitle: Text(
-                                    service.employees[index].description ??
-                                        'A seu dispor'),
-                                secondary: Icon(Icons.person),
-                                controlAffinity:
-                                    ListTileControlAffinity.trailing,
-                                activeColor: Colors.amber[800],
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+                  Expanded(
+                    child: Container(
+                      child: new Wrap(
+                        children: <Widget>[
+                          ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            itemCount: service.employees.length,
+                            itemBuilder: (context, index) {
+                              return Theme(
+                                data: ThemeData(
+                                  unselectedWidgetColor: Colors.amber[800],
+                                ),
+                                child: RadioListTile<String>(
+                                  title:
+                                      Text(service.employees[index].fullName),
+                                  value: service.employees[index].id,
+                                  groupValue: groupValueRadioList,
+                                  onChanged: (String choice) {
+                                    setState(() {
+                                      groupValueRadioList = choice;
+                                    });
+                                  },
+                                  // ignore: unrelated_type_equality_checks
+                                  selected: groupValueRadioList == index,
+                                  toggleable: true,
+                                  subtitle: Text(
+                                      service.employees[index].description ??
+                                          'A seu dispor'),
+                                  secondary: Icon(Icons.person),
+                                  controlAffinity:
+                                      ListTileControlAffinity.trailing,
+                                  activeColor: Colors.amber[800],
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
+                  Center(
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                          width: 400,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              print('Oie amigo $groupValueRadioList');
+                            },
+                            child: Text("Continuar"),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.amber[800],
+                              elevation: 1, //elevation of button
+                              shape: RoundedRectangleBorder(
+                                  //to set border radius to button
+                                  borderRadius: BorderRadius.circular(10)),
+                              padding: EdgeInsets.all(15),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
