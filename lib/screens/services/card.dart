@@ -4,7 +4,7 @@ import 'package:app_sagem/models/service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CardService extends StatelessWidget {
+class CardService extends StatefulWidget {
   final List<Service> services;
   final TextStyle optionStyle;
   const CardService({
@@ -12,6 +12,16 @@ class CardService extends StatelessWidget {
     this.services,
     this.optionStyle,
   }) : super(key: key);
+
+  @override
+  _CardServiceState createState() =>
+      _CardServiceState(this.optionStyle, this.services);
+}
+
+class _CardServiceState extends State<CardService> {
+  final List<Service> services;
+  final TextStyle optionStyle;
+  _CardServiceState(this.optionStyle, this.services);
 
   @override
   Widget build(BuildContext context) {
@@ -70,69 +80,86 @@ class CardService extends StatelessWidget {
     );
   }
 
+  int value;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  setSelectedRadioTile(int val) {
+    setState(() {
+      print('aqui amigo $val e o value $value');
+      value = val;
+      print(value);
+    });
+  }
+
   void _showModalBottomSheet(BuildContext context, Service service) {
-    print(service.employees);
-    bool _value = false;
-    int val = -1;
     showModalBottomSheet(
       context: context,
       elevation: 5,
       isScrollControlled: true,
-      isDismissible: false,
+      isDismissible: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(20.0),
         ),
       ),
       builder: (BuildContext context) {
-        return Padding(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.30,
-            child: Column(
-              children: <Widget>[
-                TitleBottomSheet(title: service.title),
-                Container(
-                  child: new Wrap(
-                    children: <Widget>[
-                      ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: service.employees.length,
-                        itemBuilder: (context, index) {
-                          return Theme(
-                            data: ThemeData(
-                              unselectedWidgetColor: Colors.amber[800],
-                            ),
-                            child: RadioListTile(
-                              title: Text(service.employees[index].fullName),
-                              value: 1,
-                              groupValue: val,
-                              onChanged: (value) {
-                                // setState(() {
-                                val = value;
-                                _value = true;
-                                // });
-                              },
-                              selected: _value,
-                              toggleable: true,
-                              subtitle: Text(
-                                  service.employees[index].description ??
-                                      'A seu dispor'),
-                              secondary: Icon(Icons.person),
-                              controlAffinity: ListTileControlAffinity.trailing,
-                            ),
-                          );
-                        },
-                      )
-                    ],
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.30,
+              child: Column(
+                children: <Widget>[
+                  TitleBottomSheet(title: service.title),
+                  Container(
+                    child: new Wrap(
+                      children: <Widget>[
+                        ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: service.employees.length,
+                          itemBuilder: (context, index) {
+                            print('To no index $index');
+                            return Theme(
+                              data: ThemeData(
+                                unselectedWidgetColor: Colors.amber[800],
+                              ),
+                              child: RadioListTile<int>(
+                                title: Text(service.employees[index].fullName),
+                                value: index,
+                                groupValue: value,
+                                onChanged: (int choice) {
+                                  setState(() {
+                                    value = choice;
+                                  });
+                                },
+                                selected: value == index,
+                                toggleable: true,
+                                subtitle: Text(
+                                    service.employees[index].description ??
+                                        'A seu dispor'),
+                                secondary: Icon(Icons.person),
+                                controlAffinity:
+                                    ListTileControlAffinity.trailing,
+                                activeColor: Colors.amber[800],
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
+          );
+        });
       },
     );
   }
