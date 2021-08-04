@@ -105,76 +105,81 @@ class _CardServiceState extends State<CardService> {
               child: Column(
                 children: <Widget>[
                   TitleBottomSheet(title: service.title),
-                  Expanded(
-                    child: Container(
-                      child: new Wrap(
-                        children: <Widget>[
-                          ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            itemCount: service.employees.length,
-                            itemBuilder: (context, index) {
-                              return Theme(
-                                data: ThemeData(
-                                  unselectedWidgetColor: Colors.amber[800],
-                                ),
-                                child: RadioListTile<String>(
-                                  title:
-                                      Text(service.employees[index].fullName),
-                                  value: service.employees[index].id,
-                                  groupValue: groupValueRadioList,
-                                  onChanged: (String choice) {
-                                    setState(() {
-                                      groupValueRadioList = choice;
-                                    });
-                                  },
-                                  // ignore: unrelated_type_equality_checks
-                                  selected: groupValueRadioList == index,
-                                  toggleable: true,
-                                  subtitle: Text(
-                                      service.employees[index].description ??
-                                          'A seu dispor'),
-                                  secondary: Icon(Icons.person),
-                                  controlAffinity:
-                                      ListTileControlAffinity.trailing,
-                                  activeColor: Colors.amber[800],
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          width: 400,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              print('Oie amigo $groupValueRadioList');
-                            },
-                            child: Text("Continuar"),
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.amber[800],
-                              elevation: 1, //elevation of button
-                              shape: RoundedRectangleBorder(
-                                  //to set border radius to button
-                                  borderRadius: BorderRadius.circular(10)),
-                              padding: EdgeInsets.all(15),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  )
+                  _listViewBottomSheet(service, setState),
+                  _buttonBottomSheet()
                 ],
               ),
             ),
           );
         });
       },
+    );
+  }
+
+  Expanded _listViewBottomSheet(Service service, StateSetter setState) {
+    return Expanded(
+      child: Container(
+        child: new Wrap(
+          children: <Widget>[
+            ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: service.employees.length,
+              itemBuilder: (context, index) {
+                return Theme(
+                  data: ThemeData(
+                    unselectedWidgetColor: Colors.amber[800],
+                  ),
+                  child: RadioListTile<String>(
+                    title: Text(service.employees[index].fullName),
+                    value: service.employees[index].id,
+                    groupValue: groupValueRadioList,
+                    onChanged: (String choice) {
+                      setState(() {
+                        groupValueRadioList = choice;
+                      });
+                    },
+                    // ignore: unrelated_type_equality_checks
+                    selected: groupValueRadioList == index,
+                    toggleable: true,
+                    subtitle: Text(
+                        service.employees[index].description ?? 'A seu dispor'),
+                    secondary: Icon(Icons.person),
+                    controlAffinity: ListTileControlAffinity.trailing,
+                    activeColor: Colors.amber[800],
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Center _buttonBottomSheet() {
+    return Center(
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            width: 400,
+            child: ElevatedButton(
+              onPressed: () {
+                print('Oie amigo $groupValueRadioList');
+              },
+              child: Text("Continuar"),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.amber[800],
+                elevation: 1, //elevation of button
+                shape: RoundedRectangleBorder(
+                    //to set border radius to button
+                    borderRadius: BorderRadius.circular(10)),
+                padding: EdgeInsets.all(15),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
