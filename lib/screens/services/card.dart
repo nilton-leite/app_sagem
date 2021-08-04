@@ -1,6 +1,7 @@
 import 'package:app_sagem/components/dynamic_icon.dart';
 import 'package:app_sagem/components/title_bottom_sheet.dart';
 import 'package:app_sagem/models/service.dart';
+import 'package:app_sagem/screens/services/service_schedule.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -31,7 +32,7 @@ class _CardServiceState extends State<CardService> {
           childAspectRatio: 3 / 3,
           crossAxisSpacing: 20,
           mainAxisSpacing: 10),
-      itemBuilder: (context, index) {
+      itemBuilder: (contextGrid, index) {
         final Service service = services[index];
         return Padding(
           padding: const EdgeInsets.all(16.0),
@@ -86,6 +87,7 @@ class _CardServiceState extends State<CardService> {
     showModalBottomSheet(
       context: context,
       elevation: 5,
+      useRootNavigator: true,
       isScrollControlled: true,
       isDismissible: true,
       shape: RoundedRectangleBorder(
@@ -93,20 +95,20 @@ class _CardServiceState extends State<CardService> {
           top: Radius.circular(20.0),
         ),
       ),
-      builder: (BuildContext context) {
+      builder: (BuildContext contextModal) {
         groupValueRadioList = null;
         return StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
+            builder: (BuildContext contextBuilder, StateSetter setState) {
           return Padding(
             padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
+                bottom: MediaQuery.of(contextBuilder).viewInsets.bottom),
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.50,
+              height: MediaQuery.of(contextBuilder).size.height * 0.50,
               child: Column(
                 children: <Widget>[
                   TitleBottomSheet(title: service.title),
                   _listViewBottomSheet(service, setState),
-                  _buttonBottomSheet()
+                  _buttonBottomSheet(context),
                 ],
               ),
             ),
@@ -157,7 +159,7 @@ class _CardServiceState extends State<CardService> {
     );
   }
 
-  Center _buttonBottomSheet() {
+  Center _buttonBottomSheet(BuildContext context) {
     return Center(
       child: Column(
         children: <Widget>[
@@ -166,6 +168,11 @@ class _CardServiceState extends State<CardService> {
             child: ElevatedButton(
               onPressed: () {
                 print('Oie amigo $groupValueRadioList');
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ServiceSchedule(),
+                  ),
+                );
               },
               child: Text("Continuar"),
               style: ElevatedButton.styleFrom(

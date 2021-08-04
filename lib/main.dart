@@ -1,6 +1,6 @@
-import 'package:app_sagem/screens/dashboard.dart';
 import 'package:app_sagem/screens/splash.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() => runApp(const Chloe());
 
@@ -12,7 +12,17 @@ class Chloe extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Intl.defaultLocale = 'pt_BR';
+    // initializeDateFormatting();
     return MaterialApp(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('pt'),
+      ],
+      locale: const Locale('pt'),
       debugShowCheckedModeBanner: false,
       title: _title,
       theme: ThemeData(
