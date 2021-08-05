@@ -21,75 +21,68 @@ class ServiceScheduleState extends State<ServiceSchedule> {
       ),
       body: Stack(
         children: <Widget>[
-          Positioned(
-            left: 0,
-            top: 0,
-            right: 0,
-            bottom: 0,
-            child: SfDateRangePicker(
-              onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-                if (args.value.startDate != null &&
-                    args.value.endDate != null) {
-                  showModalBottomSheet(
-                    context: context,
-                    // elevation: 24,
-                    // useRootNavigator: true,
-                    isScrollControlled: false,
-                    // isDismissible: true,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20.0),
-                      ),
-                    ),
-                    builder: (BuildContext contextBottomSheet) {
-                      return Padding(
-                        padding: EdgeInsets.only(
-                            bottom: MediaQuery.of(contextBottomSheet)
-                                .viewInsets
-                                .bottom),
-                        child: Container(
-                          height: MediaQuery.of(context).size.height,
-                          child: Column(
-                            children: <Widget>[
-                              TitleBottomSheet(title: "Horários"),
-                              Container(
-                                child: Wrap(
-                                  children: <Widget>[
-                                    ListTile(
-                                        leading: new Icon(Icons.music_note),
-                                        title: new Text('Músicas'),
-                                        onTap: () => {}),
-                                    ListTile(
-                                      leading: new Icon(Icons.videocam),
-                                      title: new Text('Videos'),
-                                      onTap: () => {},
-                                    ),
-                                    ListTile(
-                                      leading: new Icon(Icons.satellite),
-                                      title: new Text('Tempo'),
-                                      onTap: () => {},
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+          Column(
+            children: <Widget>[
+              SfDateRangePicker(
+                onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
+                  if (args.value.startDate != null &&
+                      args.value.endDate != null) {
+                    showModalBottomSheet(
+                      context: context,
+                      elevation: 5,
+                      useRootNavigator: true,
+                      isScrollControlled: true,
+                      isDismissible: true,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20.0),
                         ),
-                      );
-                    },
-                  );
-                }
-              },
-              selectionMode: DateRangePickerSelectionMode.range,
-              startRangeSelectionColor: Colors.amber[800],
-              endRangeSelectionColor: Colors.amber[800],
-              rangeSelectionColor: Colors.amber,
-              rangeTextStyle: const TextStyle(
-                color: Colors.white,
-                fontSize: 20,
+                      ),
+                      builder: (BuildContext contextBottomSheet) {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(contextBottomSheet)
+                                  .viewInsets
+                                  .bottom),
+                          child: Container(
+                            height: MediaQuery.of(context).size.height * 0.90,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                TitleBottomSheet(title: "Horários"),
+                                Expanded(
+                                  child: Container(
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.vertical,
+                                      shrinkWrap: true,
+                                      itemCount: 100,
+                                      itemBuilder: (context, index) {
+                                        return ListTile(
+                                          title: Text("Item $index"),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
+                selectionMode: DateRangePickerSelectionMode.range,
+                startRangeSelectionColor: Colors.amber[800],
+                endRangeSelectionColor: Colors.amber[800],
+                rangeSelectionColor: Colors.amber,
+                rangeTextStyle: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+                minDate: DateTime.now(),
               ),
-              minDate: DateTime.now(),
-            ),
+            ],
           )
         ],
       ),
