@@ -8,6 +8,8 @@ class ServiceSchedule extends StatefulWidget {
 }
 
 class ServiceScheduleState extends State<ServiceSchedule> {
+  DateRangePickerController _datePickerController = DateRangePickerController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,52 +27,7 @@ class ServiceScheduleState extends State<ServiceSchedule> {
             children: <Widget>[
               SfDateRangePicker(
                 onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-                  if (args.value.startDate != null &&
-                      args.value.endDate != null) {
-                    showModalBottomSheet(
-                      context: context,
-                      elevation: 5,
-                      useRootNavigator: true,
-                      isScrollControlled: true,
-                      isDismissible: true,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(20.0),
-                        ),
-                      ),
-                      builder: (BuildContext contextBottomSheet) {
-                        return Padding(
-                          padding: EdgeInsets.only(
-                              bottom: MediaQuery.of(contextBottomSheet)
-                                  .viewInsets
-                                  .bottom),
-                          child: Container(
-                            height: MediaQuery.of(context).size.height * 0.90,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                TitleBottomSheet(title: "Horários"),
-                                Expanded(
-                                  child: Container(
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.vertical,
-                                      shrinkWrap: true,
-                                      itemCount: 100,
-                                      itemBuilder: (context, index) {
-                                        return ListTile(
-                                          title: Text("Item $index"),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  }
+                  _onSelectedData(args, context);
                 },
                 selectionMode: DateRangePickerSelectionMode.range,
                 startRangeSelectionColor: Colors.amber[800],
@@ -81,11 +38,96 @@ class ServiceScheduleState extends State<ServiceSchedule> {
                   fontSize: 20,
                 ),
                 minDate: DateTime.now(),
+                controller: _datePickerController,
               ),
             ],
           )
         ],
       ),
+    );
+  }
+
+  void _onSelectedData(
+      DateRangePickerSelectionChangedArgs args, BuildContext context) {
+    final TextStyle styleTitle = TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.bold,
+      color: Colors.amber[800],
+    );
+    print('Data inicial');
+    print(args.value.startDate);
+    print('Data final');
+    print(args.value.endDate);
+    if (args.value.startDate != null && args.value.endDate != null) {
+      final DateTime data_dias =
+          args.value.startDate.add(const Duration(days: 15));
+      var comparacao = data_dias.compareTo(args.value.endDate);
+
+      if (comparacao == 0) {
+        _showModalSechedules(context, styleTitle);
+      } else {
+        final snackBar = SnackBar(
+          content: const Text(
+              'As datas precisam estar entre 15 dias. Aplicar automaticamente?'),
+          action: SnackBarAction(
+            label: 'Aplicar',
+            onPressed: () {
+              _datePickerController.selectedRange =
+                  PickerDateRange(args.value.startDate, data_dias);
+            },
+          ),
+        );
+
+        // Find the ScaffoldMessenger in the widget tree
+        // and use it to show a SnackBar.
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    }
+  }
+
+  void _showModalSechedules(BuildContext context, TextStyle styleTitle) {
+    showModalBottomSheet(
+      context: context,
+      elevation: 5,
+      useRootNavigator: true,
+      isScrollControlled: true,
+      isDismissible: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20.0),
+        ),
+      ),
+      builder: (BuildContext contextBottomSheet) {
+        return Padding(
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(contextBottomSheet).viewInsets.bottom),
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.90,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                TitleBottomSheet(
+                    title: "Escolha o horário para seu agendamento: ",
+                    style: styleTitle),
+                Expanded(
+                  child: Container(
+                    child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: 100,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text("Item $index"),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

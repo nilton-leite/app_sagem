@@ -84,6 +84,11 @@ class _CardServiceState extends State<CardService> {
   String groupValueRadioList;
 
   void _showModalBottomSheet(BuildContext context, Service service) {
+    final TextStyle styleTitle = TextStyle(
+      fontSize: 28,
+      fontWeight: FontWeight.bold,
+      color: Colors.amber[800],
+    );
     showModalBottomSheet(
       context: context,
       elevation: 5,
@@ -106,7 +111,7 @@ class _CardServiceState extends State<CardService> {
               height: MediaQuery.of(contextBuilder).size.height * 0.50,
               child: Column(
                 children: <Widget>[
-                  TitleBottomSheet(title: service.title),
+                  TitleBottomSheet(title: service.title, style: styleTitle),
                   _listViewBottomSheet(service, setState),
                   _buttonBottomSheet(context),
                 ],

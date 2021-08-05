@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class TitleBottomSheet extends StatelessWidget {
   final String title;
-  const TitleBottomSheet({Key key, this.title}) : super(key: key);
+  final TextStyle style;
+  const TitleBottomSheet({Key key, this.title, this.style}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +19,7 @@ class TitleBottomSheet extends StatelessWidget {
           child: Text(
             this.title,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: Colors.amber[800],
-            ),
+            style: style,
           ),
         ),
         Opacity(
