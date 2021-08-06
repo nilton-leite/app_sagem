@@ -1,14 +1,28 @@
+import 'package:app_sagem/components/progress.dart';
 import 'package:app_sagem/components/title_bottom_sheet.dart';
+import 'package:app_sagem/http/webclients/services.dart';
+import 'package:app_sagem/models/service.dart';
+import 'package:app_sagem/models/service_schedule.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class ServiceSchedule extends StatefulWidget {
+  final String employeeId;
+  final String serviceId;
+  ServiceSchedule(this.employeeId, this.serviceId);
+
   @override
-  ServiceScheduleState createState() => ServiceScheduleState();
+  ServiceScheduleState createState() =>
+      ServiceScheduleState(employeeId, serviceId);
 }
 
 class ServiceScheduleState extends State<ServiceSchedule> {
+  final String employeeId;
+  final String serviceId;
   DateRangePickerController _datePickerController = DateRangePickerController();
+  final ServicesWebClient _webclient = ServicesWebClient();
+
+  ServiceScheduleState(this.employeeId, this.serviceId);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +41,7 @@ class ServiceScheduleState extends State<ServiceSchedule> {
             children: <Widget>[
               SfDateRangePicker(
                 onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
-                  _onSelectedData(args, context);
+                  _onSelectedData(args, context, employeeId, serviceId);
                 },
                 selectionMode: DateRangePickerSelectionMode.range,
                 startRangeSelectionColor: Colors.amber[800],
@@ -47,8 +61,8 @@ class ServiceScheduleState extends State<ServiceSchedule> {
     );
   }
 
-  void _onSelectedData(
-      DateRangePickerSelectionChangedArgs args, BuildContext context) {
+  void _onSelectedData(DateRangePickerSelectionChangedArgs args,
+      BuildContext context, String employeeId, String serviceId) {
     final TextStyle styleTitle = TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.bold,
@@ -61,7 +75,8 @@ class ServiceScheduleState extends State<ServiceSchedule> {
       var difference = args.value.endDate.difference(args.value.startDate);
 
       if (difference.inDays <= 15) {
-        _showModalSechedules(context, styleTitle);
+        _showModalSechedules(context, styleTitle, args.value.startDate,
+            args.value.endDate, employeeId, serviceId);
       } else {
         final snackBar = SnackBar(
           content: const Text(
@@ -80,7 +95,13 @@ class ServiceScheduleState extends State<ServiceSchedule> {
     }
   }
 
-  void _showModalSechedules(BuildContext context, TextStyle styleTitle) {
+  void _showModalSechedules(
+      BuildContext context,
+      TextStyle styleTitle,
+      DateTime dateStart,
+      DateTime dateEnd,
+      String employeeId,
+      String serviceId) {
     showModalBottomSheet(
       context: context,
       elevation: 5,
@@ -93,206 +114,140 @@ class ServiceScheduleState extends State<ServiceSchedule> {
         ),
       ),
       builder: (BuildContext contextBottomSheet) {
-        return Padding(
-          padding: EdgeInsets.only(
-              bottom: MediaQuery.of(contextBottomSheet).viewInsets.bottom),
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.90,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                TitleBottomSheet(
-                    title: "Escolha o horário para seu agendamento: ",
-                    style: styleTitle),
-                Expanded(
-                  child: Container(
-                    height: MediaQuery.of(context).size.height,
-                    child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: 100,
-                      itemBuilder: (contextList, index) {
-                        return ExpansionTile(
-                          title: Text(
-                            "Title $index",
-                            style: TextStyle(
-                                fontSize: 18.0, fontWeight: FontWeight.bold),
-                          ),
-                          children: <Widget>[
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              // scrollDirection: Axis.vertical,
-                              itemCount: 20,
-                              itemBuilder: (context, index1) {
-                                return ListTile(
-                                  title: Text("Item $index1"),
-                                );
-                              },
+        return FutureBuilder<List>(
+          initialData: [],
+          future: _webclient?.findSchedules(
+              serviceId, employeeId, dateStart, dateEnd),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+                break;
+              case ConnectionState.waiting:
+                return Progress();
+              case ConnectionState.active:
+                break;
+              case ConnectionState.done:
+                if (snapshot.hasData) {
+                  final List<ServicesSchedule> schedules = snapshot.data;
+                  if (schedules.isNotEmpty) {
+                    return StatefulBuilder(
+                      builder: (
+                        BuildContext contextBuilder,
+                        StateSetter setState,
+                      ) {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(contextBottomSheet)
+                                  .viewInsets
+                                  .bottom),
+                          child: Container(
+                            height: MediaQuery.of(context).size.height * 0.90,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                TitleBottomSheet(
+                                    title:
+                                        "Escolha o horário para seu agendamento: ",
+                                    style: styleTitle),
+                                _expandedListDate(context, schedules, setState),
+                              ],
                             ),
-                          ],
+                          ),
                         );
                       },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+                    );
+                  }
+                }
+                return Text('Elaia');
+            }
+            return Text('Elaia 2');
+          },
         );
       },
     );
   }
+
+  String groupValueRadioList;
+
+  Expanded _expandedListDate(
+    BuildContext context,
+    List<ServicesSchedule> schedules,
+    StateSetter setState,
+  ) {
+    return Expanded(
+      child: Container(
+        height: MediaQuery.of(context).size.height,
+        child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: schedules.length,
+          itemBuilder: (contextList, index) {
+            return ExpansionTile(
+              title: Text(
+                schedules[index].date,
+                style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
+              children: <Widget>[
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: schedules[index].times.length,
+                  itemBuilder: (context, index1) {
+                    groupValueRadioList = null;
+                    return Theme(
+                      data: ThemeData(
+                        unselectedWidgetColor: Colors.amber[800],
+                      ),
+                      child: RadioListTile<String>(
+                        title: Text(schedules[index].times[index1]),
+                        value: schedules[index].times[index1],
+                        groupValue: groupValueRadioList,
+                        onChanged: (String choice) {
+                          showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Agendamento'),
+                                content: Text('Deseja agendar para o dia ' +
+                                    schedules[index].date +
+                                    ' ás ' +
+                                    schedules[index].times[index1]),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, 'Cancelar'),
+                                    child: const Text('Cancelar'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, 'SIM'),
+                                    child: const Text('SIM'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        // ignore: unrelated_type_equality_checks
+                        selected: groupValueRadioList == index,
+                        toggleable: true,
+                        // subtitle: Text(
+                        //     service.employees[index].description ?? 'A seu dispor'),
+                        secondary: Icon(Icons.access_time),
+                        controlAffinity: ListTileControlAffinity.trailing,
+                        activeColor: Colors.amber[800],
+                      ),
+                    );
+                  },
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
 }
-
-
-
-// import 'package:flutter/material.dart';
-
-// import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
-//     show CalendarCarousel;
-// import 'package:flutter_calendar_carousel/classes/event.dart';
-// import 'package:flutter_calendar_carousel/classes/event_list.dart';
-// import 'package:intl/intl.dart';
-
-// class ServiceSchedule extends StatefulWidget {
-//   ServiceSchedule({Key key, this.title}) : super(key: key);
-
-//   // This widget is the home page of your application. It is stateful, meaning
-//   // that it has a State object (defined below) that contains fields that affect
-//   // how it looks.
-
-//   // This class is the configuration for the state. It holds the values (in this
-//   // case the title) provided by the parent (in this case the App widget) and
-//   // used by the build method of the State. Fields in a Widget subclass are
-//   // always marked "final".
-
-//   final String title;
-
-//   @override
-//   _ServiceScheduleState createState() => new _ServiceScheduleState();
-// }
-
-// class _ServiceScheduleState extends State<ServiceSchedule> {
-//   DateTime _currentDate = DateTime.now(); //DateTime(2019, 2, 3);
-//   DateTime _currentDate2 = DateTime.now();
-//   String _currentMonth = DateFormat.yMMM().format(DateTime.now());
-
-//   CalendarCarousel _calendarCarouselNoHeader;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     /// Example Calendar Carousel without header and custom prev & next button
-//     _calendarCarouselNoHeader = CalendarCarousel<Event>(
-//       todayBorderColor: Colors.black,
-//       onDayPressed: (DateTime date, List<Event> events) {
-//         print('Aqui no dia $date');
-//         this.setState(() => _currentDate2 = date);
-//         events.forEach((event) => print(event.title));
-//       },
-//       daysHaveCircularBorder: true,
-//       weekendTextStyle: TextStyle(
-//         color: Colors.red,
-//       ),
-//       thisMonthDayBorderColor: Colors.grey,
-//       weekFormat: false,
-//       height: 420.0,
-//       selectedDateTime: _currentDate2,
-//       customGridViewPhysics: NeverScrollableScrollPhysics(),
-//       markedDateCustomShapeBorder:
-//           CircleBorder(side: BorderSide(color: Colors.amber[800])),
-//       markedDateCustomTextStyle: TextStyle(
-//         fontSize: 18,
-//         color: Colors.blue,
-//       ),
-//       showHeader: false,
-//       locale: 'pt',
-//       todayTextStyle: TextStyle(
-//         color: Colors.black,
-//       ),
-//       todayButtonColor: Colors.amber[800],
-//       selectedDayTextStyle: TextStyle(
-//         color: Colors.white,
-//       ),
-//       selectedDayButtonColor: Colors.pinkAccent,
-//       minSelectedDate: _currentDate.subtract(Duration(days: 360)),
-//       maxSelectedDate: _currentDate.add(Duration(days: 360)),
-//       prevDaysTextStyle: TextStyle(
-//         fontSize: 16,
-//         color: Colors.pinkAccent,
-//       ),
-//       inactiveDaysTextStyle: TextStyle(
-//         color: Colors.tealAccent,
-//         fontSize: 16,
-//       ),
-//       onCalendarChanged: (DateTime date) {
-//         this.setState(() => _currentMonth = DateFormat.yMMM().format(date));
-//       },
-//       onDayLongPressed: (DateTime date) {
-//         print('long pressed date $date');
-//       },
-//     );
-
-//     return new Scaffold(
-//         appBar: new AppBar(
-//           centerTitle: true,
-//           title: new Text(
-//             'Agendamentos',
-//             style: Theme.of(context).appBarTheme.titleTextStyle,
-//           ),
-//         ),
-//         body: SingleChildScrollView(
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             mainAxisAlignment: MainAxisAlignment.start,
-//             children: <Widget>[
-//               Container(
-//                 margin: EdgeInsets.only(
-//                   top: 30.0,
-//                   bottom: 16.0,
-//                   left: 16.0,
-//                   right: 16.0,
-//                 ),
-//                 child: new Row(
-//                   children: <Widget>[
-//                     Expanded(
-//                         child: Text(
-//                       _currentMonth,
-//                       style: TextStyle(
-//                         fontWeight: FontWeight.bold,
-//                         fontSize: 24.0,
-//                       ),
-//                     )),
-//                     ElevatedButton(
-//                       child: Text('PREV'),
-//                       onPressed: () {
-//                         setState(() {
-//                           _currentDate2 =
-//                               _currentDate2.subtract(Duration(days: 30));
-//                           _currentMonth =
-//                               DateFormat.yMMM().format(_currentDate2);
-//                         });
-//                       },
-//                     ),
-//                     ElevatedButton(
-//                       child: Text('NEXT'),
-//                       onPressed: () {
-//                         setState(() {
-//                           _currentDate2 = _currentDate2.add(Duration(days: 30));
-//                           _currentMonth =
-//                               DateFormat.yMMM().format(_currentDate2);
-//                         });
-//                       },
-//                     )
-//                   ],
-//                 ),
-//               ),
-//               Container(
-//                 margin: EdgeInsets.symmetric(horizontal: 16.0),
-//                 child: _calendarCarouselNoHeader,
-//               ), //
-//             ],
-//           ),
-//         ));
-//   }
-// }

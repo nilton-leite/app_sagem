@@ -7,4 +7,4 @@ final Client client = InterceptedClient.build(
     interceptors: [LoggingInterceptor()],
     requestTimeout: Duration(seconds: 15));
 
-const String baseUrl = 'http://172.29.32.1:3009/services';
+const String baseUrl = 'http://172.29.32.1:3009';

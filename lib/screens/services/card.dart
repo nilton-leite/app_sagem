@@ -113,7 +113,7 @@ class _CardServiceState extends State<CardService> {
                 children: <Widget>[
                   TitleBottomSheet(title: service.title, style: styleTitle),
                   _listViewBottomSheet(service, setState),
-                  _buttonBottomSheet(context),
+                  _buttonBottomSheet(context, service),
                 ],
               ),
             ),
@@ -160,7 +160,7 @@ class _CardServiceState extends State<CardService> {
     );
   }
 
-  Center _buttonBottomSheet(BuildContext context) {
+  Center _buttonBottomSheet(BuildContext context, Service service) {
     return Center(
       child: Column(
         children: <Widget>[
@@ -168,10 +168,10 @@ class _CardServiceState extends State<CardService> {
             width: 400,
             child: ElevatedButton(
               onPressed: () {
-                print('Oie amigo $groupValueRadioList');
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => ServiceSchedule(),
+                    builder: (context) =>
+                        ServiceSchedule(groupValueRadioList, service.id),
                   ),
                 );
               },

@@ -23,13 +23,6 @@ class Service {
     this.employees,
   );
 
-//   List<Service> productsResponseFromJson(String str) =>
-//     List<Service>.from(
-//         json.decode(str).map((x) => Service.fromJson(x)));
-
-// String productsResponseToJson(List<Service> data) =>
-//     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
-
   Service.fromJson(Map<String, dynamic> json)
       : id = json['_id'],
         title = json['title'],
