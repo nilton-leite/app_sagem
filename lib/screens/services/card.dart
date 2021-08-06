@@ -126,39 +126,35 @@ class _CardServiceState extends State<CardService> {
   Expanded _listViewBottomSheet(Service service, StateSetter setState) {
     return Expanded(
       child: Container(
-        child: new Wrap(
-          children: <Widget>[
-            ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: service.employees.length,
-              itemBuilder: (context, index) {
-                return Theme(
-                  data: ThemeData(
-                    unselectedWidgetColor: Colors.amber[800],
-                  ),
-                  child: RadioListTile<String>(
-                    title: Text(service.employees[index].fullName),
-                    value: service.employees[index].id,
-                    groupValue: groupValueRadioList,
-                    onChanged: (String choice) {
-                      setState(() {
-                        groupValueRadioList = choice;
-                      });
-                    },
-                    // ignore: unrelated_type_equality_checks
-                    selected: groupValueRadioList == index,
-                    toggleable: true,
-                    subtitle: Text(
-                        service.employees[index].description ?? 'A seu dispor'),
-                    secondary: Icon(Icons.person),
-                    controlAffinity: ListTileControlAffinity.trailing,
-                    activeColor: Colors.amber[800],
-                  ),
-                );
-              },
-            ),
-          ],
+        child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: service.employees.length,
+          itemBuilder: (context, index) {
+            return Theme(
+              data: ThemeData(
+                unselectedWidgetColor: Colors.amber[800],
+              ),
+              child: RadioListTile<String>(
+                title: Text(service.employees[index].fullName),
+                value: service.employees[index].id,
+                groupValue: groupValueRadioList,
+                onChanged: (String choice) {
+                  setState(() {
+                    groupValueRadioList = choice;
+                  });
+                },
+                // ignore: unrelated_type_equality_checks
+                selected: groupValueRadioList == index,
+                toggleable: true,
+                subtitle: Text(
+                    service.employees[index].description ?? 'A seu dispor'),
+                secondary: Icon(Icons.person),
+                controlAffinity: ListTileControlAffinity.trailing,
+                activeColor: Colors.amber[800],
+              ),
+            );
+          },
         ),
       ),
     );
