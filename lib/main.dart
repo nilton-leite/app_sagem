@@ -26,11 +26,11 @@ class Chloe extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: _title,
       theme: ThemeData(
-        primarySwatch: Colors.pink,
+        primaryColor: Colors.white,
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.grey[100],
-          iconTheme: IconThemeData(color: Colors.red),
-          actionsIconTheme: IconThemeData(color: Colors.amber),
+          iconTheme: IconThemeData(color: Colors.amber[800]),
+          actionsIconTheme: IconThemeData(color: Colors.amber[800]),
           centerTitle: false,
           elevation: 15,
           titleTextStyle: TextStyle(color: Colors.black),

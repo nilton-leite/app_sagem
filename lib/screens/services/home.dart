@@ -11,13 +11,8 @@ class Services extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'Serviços',
-          style: Theme.of(context).appBarTheme.titleTextStyle,
-        ),
+        title: Text('Serviços'),
       ),
-      backgroundColor: Colors.blueGrey[50],
       body: FutureBuilder<List>(
         initialData: [],
         future: _webclient?.findAll(),

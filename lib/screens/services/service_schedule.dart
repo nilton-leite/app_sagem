@@ -3,6 +3,7 @@ import 'package:app_sagem/components/title_bottom_sheet.dart';
 import 'package:app_sagem/http/webclients/services.dart';
 import 'package:app_sagem/models/service.dart';
 import 'package:app_sagem/models/service_schedule.dart';
+import 'package:app_sagem/screens/services/revision.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -28,12 +29,7 @@ class ServiceScheduleState extends State<ServiceSchedule> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          'Agendamentos',
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: Colors.white,
+        title: const Text('Agendamentos'),
       ),
       body: Stack(
         children: <Widget>[
@@ -114,6 +110,7 @@ class ServiceScheduleState extends State<ServiceSchedule> {
         ),
       ),
       builder: (BuildContext contextBottomSheet) {
+        groupValueRadioList = null;
         return FutureBuilder<List>(
           initialData: [],
           future: _webclient?.findSchedules(
@@ -196,7 +193,6 @@ class ServiceScheduleState extends State<ServiceSchedule> {
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: schedules[index].times.length,
                   itemBuilder: (context, index1) {
-                    groupValueRadioList = null;
                     return Theme(
                       data: ThemeData(
                         unselectedWidgetColor: Colors.amber[800],
@@ -206,36 +202,54 @@ class ServiceScheduleState extends State<ServiceSchedule> {
                         value: schedules[index].times[index1],
                         groupValue: groupValueRadioList,
                         onChanged: (String choice) {
-                          showDialog<String>(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Agendamento'),
-                                content: Text('Deseja agendar para o dia ' +
-                                    schedules[index].date +
-                                    ' ás ' +
-                                    schedules[index].times[index1]),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, 'Cancelar'),
-                                    child: const Text('Cancelar'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, 'SIM'),
-                                    child: const Text('SIM'),
-                                  ),
-                                ],
-                              );
-                            },
+                          setState(() {
+                            groupValueRadioList = choice;
+                          });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (BuildContext context) => Revision(),
+                              fullscreenDialog: true,
+                            ),
                           );
+                          // showDialog<String>(
+                          //   context: context,
+                          //   builder: (BuildContext context) {
+                          //     return AlertDialog(
+                          //       title: const Text('Agendamento'),
+                          //       content: Text('Deseja agendar para o dia ' +
+                          //           schedules[index].date +
+                          //           ' ás ' +
+                          //           schedules[index].times[index1]),
+                          //       actions: <Widget>[
+                          //         TextButton(
+                          //           onPressed: () =>
+                          //               Navigator.pop(context, 'Não'),
+                          //           child: const Text(
+                          //             'Não',
+                          //             style: TextStyle(
+                          //                 fontWeight: FontWeight.bold,
+                          //                 color: Colors.amber),
+                          //           ),
+                          //         ),
+                          //         TextButton(
+                          //           onPressed: () =>
+                          //               Navigator.pop(context, 'Confirmar'),
+                          //           child: const Text(
+                          //             'Confirmar',
+                          //             style: TextStyle(
+                          //                 fontWeight: FontWeight.bold,
+                          //                 color: Colors.amber),
+                          //           ),
+                          //         ),
+                          //       ],
+                          //     );
+                          //   },
+                          // );
                         },
                         // ignore: unrelated_type_equality_checks
                         selected: groupValueRadioList == index,
                         toggleable: true,
-                        // subtitle: Text(
-                        //     service.employees[index].description ?? 'A seu dispor'),
                         secondary: Icon(Icons.access_time),
                         controlAffinity: ListTileControlAffinity.trailing,
                         activeColor: Colors.amber[800],
