@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:app_sagem/http/webclient.dart';
+import 'package:app_sagem/models/schedules.dart';
 import 'package:app_sagem/models/service.dart';
 import 'package:app_sagem/models/service_schedule.dart';
 import 'package:http/http.dart';
@@ -18,18 +19,25 @@ class ServicesWebClient {
         .toList();
   }
 
-  Future<List<ServicesSchedule>> findSchedules(String serviceId,
-      String employeeId, DateTime dateStart, DateTime dateEnd) async {
+  Future<List<Schedule>> findSchedules(String serviceId, String employeeId,
+      DateTime dateStart, DateTime dateEnd) async {
     final Response response = await client
         .get(Uri.parse(baseUrl +
             '/schedules?serviceId=$serviceId&employeeId=$employeeId&start_date=$dateStart&end_date=$dateEnd'))
         .timeout(Duration(seconds: 5));
 
     final List<dynamic> decodedJson = jsonDecode(response.body);
+    // print(map);
+    // print(decodedJson);
+    // final List<dynamic> decodedJson = json.decode(response.body);
+    // final List<dynamic>  decodedJson = List<dynamic>.from(
+    //                       response.body.map<dynamic>(
+    //                         (dynamic item) => response.body,
+    //                       ),
+    //                     ); //jsonDecode(response.body);
 
     return decodedJson
-        .map<ServicesSchedule>(
-            (dynamic json) => ServicesSchedule.fromJson(json))
+        .map<Schedule>((json) => Schedule.fromJson(json))
         .toList();
   }
 

@@ -4,10 +4,8 @@ class Service {
   final String id;
   final String title;
   final String description;
-  final String price;
-  final String startTime;
-  final String endTime;
-  final String intervalTime;
+  final int priceDefault;
+  final int executionTimeDefault;
   final String icon;
   List<Employees> employees;
 
@@ -15,10 +13,8 @@ class Service {
     this.id,
     this.title,
     this.description,
-    this.price,
-    this.startTime,
-    this.endTime,
-    this.intervalTime,
+    this.priceDefault,
+    this.executionTimeDefault,
     this.icon,
     this.employees,
   );
@@ -27,10 +23,8 @@ class Service {
       : id = json['_id'],
         title = json['title'],
         description = json['description'],
-        price = json['price'],
-        startTime = json['startTime'],
-        endTime = json['endTime'],
-        intervalTime = json['intervalTime'],
+        priceDefault = json['price_default'],
+        executionTimeDefault = json['execution_time_default'],
         icon = json['icon'],
         employees = List<Employees>.from(
             json['employees'].map((x) => Employees.fromJson(x)));
@@ -39,10 +33,8 @@ class Service {
         'id': id,
         'title': title,
         'description': description,
-        'price': price,
-        'startTime': startTime,
-        'endTime': endTime,
-        'intervalTime': intervalTime,
+        'price': priceDefault,
+        'intervalTime': executionTimeDefault,
         'icon': icon,
         'employees': List<dynamic>.from(
             employees.map((x) => x.toJson())), //employees.toJson(),
@@ -50,6 +42,6 @@ class Service {
 
   @override
   String toString() {
-    return 'Services{title: $title, description: $description, price: $price, startTime: $startTime, endTime: $endTime, intervalTime: $intervalTime, icon: $icon, employees: $employees}';
+    return 'Services{title: $title, description: $description, price: $priceDefault, executionTime: $executionTimeDefault, icon: $icon, employees: $employees}';
   }
 }

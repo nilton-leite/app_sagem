@@ -1,6 +1,7 @@
 import 'package:app_sagem/components/progress.dart';
 import 'package:app_sagem/components/title_bottom_sheet.dart';
 import 'package:app_sagem/http/webclients/services.dart';
+import 'package:app_sagem/models/schedules.dart';
 import 'package:app_sagem/models/service.dart';
 import 'package:app_sagem/models/service_schedule.dart';
 import 'package:app_sagem/screens/services/revision.dart';
@@ -125,7 +126,7 @@ class ServiceScheduleState extends State<ServiceSchedule> {
                 break;
               case ConnectionState.done:
                 if (snapshot.hasData) {
-                  final List<ServicesSchedule> schedules = snapshot.data;
+                  final List<Schedule> schedules = snapshot.data;
                   if (schedules.isNotEmpty) {
                     return StatefulBuilder(
                       builder: (
@@ -168,7 +169,7 @@ class ServiceScheduleState extends State<ServiceSchedule> {
 
   Expanded _expandedListDate(
     BuildContext context,
-    List<ServicesSchedule> schedules,
+    List<Schedule> schedules,
     StateSetter setState,
   ) {
     return Expanded(
@@ -177,11 +178,11 @@ class ServiceScheduleState extends State<ServiceSchedule> {
         child: ListView.builder(
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          itemCount: schedules.length,
+          itemCount: schedules[0].intervalFinal.length,
           itemBuilder: (contextList, index) {
             return ExpansionTile(
               title: Text(
-                schedules[index].date,
+                schedules[0].intervalFinal[index].date,
                 style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
@@ -191,15 +192,16 @@ class ServiceScheduleState extends State<ServiceSchedule> {
                 ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: schedules[index].times.length,
+                  itemCount: schedules[0].intervalFinal[index].times.length,
                   itemBuilder: (context, index1) {
                     return Theme(
                       data: ThemeData(
                         unselectedWidgetColor: Colors.amber[800],
                       ),
                       child: RadioListTile<String>(
-                        title: Text(schedules[index].times[index1]),
-                        value: schedules[index].times[index1],
+                        title: Text(
+                            schedules[0].intervalFinal[index].times[index1]),
+                        value: schedules[0].intervalFinal[index].times[index1],
                         groupValue: groupValueRadioList,
                         onChanged: (String choice) {
                           setState(() {
