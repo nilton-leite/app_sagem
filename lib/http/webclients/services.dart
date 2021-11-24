@@ -27,14 +27,6 @@ class ServicesWebClient {
         .timeout(Duration(seconds: 5));
 
     final List<dynamic> decodedJson = jsonDecode(response.body);
-    // print(map);
-    // print(decodedJson);
-    // final List<dynamic> decodedJson = json.decode(response.body);
-    // final List<dynamic>  decodedJson = List<dynamic>.from(
-    //                       response.body.map<dynamic>(
-    //                         (dynamic item) => response.body,
-    //                       ),
-    //                     ); //jsonDecode(response.body);
 
     return decodedJson
         .map<Schedule>((json) => Schedule.fromJson(json))

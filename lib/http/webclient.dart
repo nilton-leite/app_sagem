@@ -7,4 +7,4 @@ final Client client = InterceptedClient.build(
     interceptors: [LoggingInterceptor()],
     requestTimeout: Duration(seconds: 15));
 
-const String baseUrl = 'https://10b9-168-138-139-211.ngrok.io';
+const String baseUrl = 'https://ee76-168-138-139-211.ngrok.io';

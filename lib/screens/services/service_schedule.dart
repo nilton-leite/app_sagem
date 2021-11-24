@@ -2,8 +2,6 @@ import 'package:app_sagem/components/progress.dart';
 import 'package:app_sagem/components/title_bottom_sheet.dart';
 import 'package:app_sagem/http/webclients/services.dart';
 import 'package:app_sagem/models/schedules.dart';
-import 'package:app_sagem/models/service.dart';
-import 'package:app_sagem/models/service_schedule.dart';
 import 'package:app_sagem/screens/services/revision.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -210,7 +208,10 @@ class ServiceScheduleState extends State<ServiceSchedule> {
                           Navigator.push(
                             context,
                             MaterialPageRoute<void>(
-                              builder: (BuildContext context) => Revision(),
+                              builder: (BuildContext context) => Revision(
+                                  schedules[0].intervalFinal[index].date,
+                                  groupValueRadioList,
+                                  schedules),
                               fullscreenDialog: true,
                             ),
                           );
