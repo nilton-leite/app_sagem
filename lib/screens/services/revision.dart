@@ -1,25 +1,36 @@
+import 'package:app_sagem/http/webclients/schedules.dart';
 import 'package:app_sagem/models/schedules.dart';
+import 'package:app_sagem/screens/dashboard.dart';
+import 'package:app_sagem/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:app_sagem/components/progress.dart';
 
 class Revision extends StatefulWidget {
   final String dateChoice;
   final String scheduleChoice;
+  final String employeeId;
+  final String serviceId;
   final List<Schedule> employeeService;
-  Revision(this.dateChoice, this.scheduleChoice, this.employeeService);
+  Revision(this.dateChoice, this.scheduleChoice, this.employeeService,
+      this.employeeId, this.serviceId);
 
   @override
-  RevisionState createState() =>
-      RevisionState(dateChoice, scheduleChoice, employeeService);
+  RevisionState createState() => RevisionState(
+      dateChoice, scheduleChoice, employeeService, employeeId, serviceId);
 }
 
 class RevisionState extends State<Revision> {
   final String dateChoice;
   final String scheduleChoice;
   final List<Schedule> employeeService;
+  final String employeeId;
+  final String serviceId;
   NumberFormat formatter = NumberFormat.simpleCurrency();
+  final SchedulesWebClient _webclient = SchedulesWebClient();
 
-  RevisionState(this.dateChoice, this.scheduleChoice, this.employeeService);
+  RevisionState(this.dateChoice, this.scheduleChoice, this.employeeService,
+      this.employeeId, this.serviceId);
 
   @override
   Widget build(BuildContext context) {
@@ -121,8 +132,20 @@ class RevisionState extends State<Revision> {
       bottomNavigationBar: Padding(
         padding: EdgeInsets.all(8.0),
         child: ElevatedButton(
-          onPressed: () {
-            print('OIE AMIGOS');
+          onPressed: () async {
+            print('ANtes do pro');
+            // return CircularProgressIndicator();
+            final teste = await _webclient.save(
+                employeeId, serviceId, dateChoice, scheduleChoice);
+
+            setState(() {
+              print('OIE AMIGOS');
+              print(teste);
+              final snackBar = SnackBar(
+                  content: Text('Parabéns! Agendamento feito com sucesso!'));
+
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            });
           },
           child: Text("Finalizar agendamento"),
           style: ElevatedButton.styleFrom(

@@ -42,7 +42,7 @@ class ProgressView extends StatelessWidget {
           title: Text('Loading'),
         ),
         body: Progress(
-          message: 'Enviando transação...',
+          message: 'Carregando...',
         ),
       ),
     );

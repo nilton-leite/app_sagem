@@ -1,3 +1,4 @@
+import 'package:app_sagem/screens/dashboard.dart';
 import 'package:app_sagem/screens/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -16,28 +17,30 @@ class Bless extends StatelessWidget {
     Intl.defaultLocale = 'pt_BR';
     // initializeDateFormatting();
     return MaterialApp(
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: [
-        const Locale('pt'),
-      ],
-      locale: const Locale('pt'),
-      debugShowCheckedModeBanner: false,
-      title: _title,
-      theme: ThemeData(
-        primaryColor: Colors.white,
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.grey[100],
-          iconTheme: IconThemeData(color: Colors.amber[800]),
-          actionsIconTheme: IconThemeData(color: Colors.amber[800]),
-          centerTitle: false,
-          elevation: 15,
-          titleTextStyle: TextStyle(color: Colors.black),
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: [
+          const Locale('pt'),
+        ],
+        locale: const Locale('pt'),
+        debugShowCheckedModeBanner: false,
+        title: _title,
+        theme: ThemeData(
+          primaryColor: Colors.white,
+          appBarTheme: AppBarTheme(
+            backgroundColor: Colors.grey[100],
+            iconTheme: IconThemeData(color: Colors.amber[800]),
+            actionsIconTheme: IconThemeData(color: Colors.amber[800]),
+            centerTitle: false,
+            elevation: 15,
+            titleTextStyle: TextStyle(color: Colors.black),
+          ),
         ),
-      ),
-      home: HomePage(),
-    );
+        home: HomePage(),
+        routes: {
+          "/dashboard": (_) => new Dashboard(),
+        });
   }
 }

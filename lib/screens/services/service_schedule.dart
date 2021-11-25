@@ -1,6 +1,6 @@
 import 'package:app_sagem/components/progress.dart';
 import 'package:app_sagem/components/title_bottom_sheet.dart';
-import 'package:app_sagem/http/webclients/services.dart';
+import 'package:app_sagem/http/webclients/schedules.dart';
 import 'package:app_sagem/models/schedules.dart';
 import 'package:app_sagem/screens/services/revision.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +20,7 @@ class ServiceScheduleState extends State<ServiceSchedule> {
   final String employeeId;
   final String serviceId;
   DateRangePickerController _datePickerController = DateRangePickerController();
-  final ServicesWebClient _webclient = ServicesWebClient();
+  final SchedulesWebClient _webclient = SchedulesWebClient();
 
   ServiceScheduleState(this.employeeId, this.serviceId);
 
@@ -145,7 +145,8 @@ class ServiceScheduleState extends State<ServiceSchedule> {
                                     title:
                                         "Escolha o horário para seu agendamento: ",
                                     style: styleTitle),
-                                _expandedListDate(context, schedules, setState),
+                                _expandedListDate(context, schedules, setState,
+                                    employeeId, serviceId),
                               ],
                             ),
                           ),
@@ -165,11 +166,8 @@ class ServiceScheduleState extends State<ServiceSchedule> {
 
   String groupValueRadioList;
 
-  Expanded _expandedListDate(
-    BuildContext context,
-    List<Schedule> schedules,
-    StateSetter setState,
-  ) {
+  Expanded _expandedListDate(BuildContext context, List<Schedule> schedules,
+      StateSetter setState, String employeeId, String serviceId) {
     return Expanded(
       child: Container(
         height: MediaQuery.of(context).size.height,
@@ -211,44 +209,12 @@ class ServiceScheduleState extends State<ServiceSchedule> {
                               builder: (BuildContext context) => Revision(
                                   schedules[0].intervalFinal[index].date,
                                   groupValueRadioList,
-                                  schedules),
+                                  schedules,
+                                  employeeId,
+                                  serviceId),
                               fullscreenDialog: true,
                             ),
                           );
-                          // showDialog<String>(
-                          //   context: context,
-                          //   builder: (BuildContext context) {
-                          //     return AlertDialog(
-                          //       title: const Text('Agendamento'),
-                          //       content: Text('Deseja agendar para o dia ' +
-                          //           schedules[index].date +
-                          //           ' ás ' +
-                          //           schedules[index].times[index1]),
-                          //       actions: <Widget>[
-                          //         TextButton(
-                          //           onPressed: () =>
-                          //               Navigator.pop(context, 'Não'),
-                          //           child: const Text(
-                          //             'Não',
-                          //             style: TextStyle(
-                          //                 fontWeight: FontWeight.bold,
-                          //                 color: Colors.amber),
-                          //           ),
-                          //         ),
-                          //         TextButton(
-                          //           onPressed: () =>
-                          //               Navigator.pop(context, 'Confirmar'),
-                          //           child: const Text(
-                          //             'Confirmar',
-                          //             style: TextStyle(
-                          //                 fontWeight: FontWeight.bold,
-                          //                 color: Colors.amber),
-                          //           ),
-                          //         ),
-                          //       ],
-                          //     );
-                          //   },
-                          // );
                         },
                         // ignore: unrelated_type_equality_checks
                         selected: groupValueRadioList == index,
