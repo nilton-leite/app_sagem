@@ -1,10 +1,12 @@
 import 'package:app_sagem/http/webclients/schedules.dart';
+import 'package:app_sagem/main.dart';
 import 'package:app_sagem/models/schedules.dart';
 import 'package:app_sagem/screens/dashboard.dart';
 import 'package:app_sagem/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:app_sagem/components/progress.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class Revision extends StatefulWidget {
   final String dateChoice;
@@ -28,6 +30,7 @@ class RevisionState extends State<Revision> {
   final String serviceId;
   NumberFormat formatter = NumberFormat.simpleCurrency();
   final SchedulesWebClient _webclient = SchedulesWebClient();
+  bool isLoading = false;
 
   RevisionState(this.dateChoice, this.scheduleChoice, this.employeeService,
       this.employeeId, this.serviceId);
@@ -131,33 +134,53 @@ class RevisionState extends State<Revision> {
       ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.all(8.0),
-        child: ElevatedButton(
-          onPressed: () async {
-            print('ANtes do pro');
-            // return CircularProgressIndicator();
-            final teste = await _webclient.save(
-                employeeId, serviceId, dateChoice, scheduleChoice);
+        child: isLoading
+            ? Progress()
+            : ElevatedButton(
+                onPressed: () async {
+                  print('ANtes do pro');
+                  setState(() {
+                    isLoading = true;
+                  });
 
-            setState(() {
-              print('OIE AMIGOS');
-              print(teste);
-              final snackBar = SnackBar(
-                  content: Text('Parabéns! Agendamento feito com sucesso!'));
+                  // return CircularProgressIndicator();
+                  final teste = await _webclient.save(
+                      employeeId, serviceId, dateChoice, scheduleChoice);
+                  setState(() {
+                    if (teste) {
+                      isLoading = false;
+                    }
+                  });
 
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            });
-          },
-          child: Text("Finalizar agendamento"),
-          style: ElevatedButton.styleFrom(
-            primary: Colors.amber[800],
-            elevation: 1, //elevation of button
-            shape: RoundedRectangleBorder(
-                //to set border radius to button
-                borderRadius: BorderRadius.circular(10)),
-            padding: EdgeInsets.all(15),
-          ),
-        ),
+                  if (!isLoading) {
+                    final snackBar = SnackBar(
+                        content:
+                            Text('Parabéns! Agendamento feito com sucesso!'));
+
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+                },
+                child: Text("Finalizar agendamento"),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.amber[800],
+                  elevation: 1, //elevation of button
+                  shape: RoundedRectangleBorder(
+                      //to set border radius to button
+                      borderRadius: BorderRadius.circular(10)),
+                  padding: EdgeInsets.all(15),
+                ),
+              ),
       ),
     );
+  }
+
+  Widget _showMessage(BuildContext context) {
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute<void>(
+    //     builder: (BuildContext context) => Dashboard(),
+    //     fullscreenDialog: true,
+    //   ),
+    // );
   }
 }
