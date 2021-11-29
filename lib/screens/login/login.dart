@@ -100,6 +100,18 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    Map<int, Color> color = {
+      50: Color.fromRGBO(136, 14, 79, .1),
+      100: Color.fromRGBO(136, 14, 79, .2),
+      200: Color.fromRGBO(136, 14, 79, .3),
+      300: Color.fromRGBO(136, 14, 79, .4),
+      400: Color.fromRGBO(136, 14, 79, .5),
+      500: Color.fromRGBO(136, 14, 79, .6),
+      600: Color.fromRGBO(136, 14, 79, .7),
+      700: Color.fromRGBO(136, 14, 79, .8),
+      800: Color.fromRGBO(136, 14, 79, .9),
+      900: Color.fromRGBO(136, 14, 79, 1),
+    };
     return Scaffold(
         backgroundColor: Colors.black,
         body: Builder(
@@ -110,7 +122,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     fit: StackFit.expand,
                     children: <Widget>[
                       Image(
-                        image: new AssetImage("images/pincel.png"),
+                        image: new AssetImage("images/bless_white.png"),
                         fit: BoxFit.cover,
                         color: Colors.black54,
                         colorBlendMode: BlendMode.darken,
@@ -118,21 +130,31 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                       Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
+                            // Image(
+                            //   image: new AssetImage("images/bless.png"),
+                            //   // size: _iconAnimation.value * 100,
+                            //   // fit: BoxFit.cover,
+                            //   // color: Colors.black54,
+                            //   // colorBlendMode: BlendMode.darken,
+                            // ),
                             //TODO: Colocar o Logo da Grippen com a animação
-                            FlutterLogo(
-                              size: _iconAnimation.value * 100,
-                            ),
+                            // FlutterLogo(
+                            //   size: _iconAnimation.value * 100,
+                            // ),
+
                             FadeTransition(
                               opacity: _formAnimation,
                               child: Form(
                                   child: Theme(
                                       data: ThemeData(
                                           brightness: Brightness.dark,
-                                          primarySwatch: Colors.blue,
+                                          primarySwatch: MaterialColor(
+                                              0xFFCC39191,
+                                              color), //Colors.blue,
                                           inputDecorationTheme:
                                               InputDecorationTheme(
                                                   labelStyle: TextStyle(
-                                                      color: Colors.blueAccent,
+                                                      color: Color(0xFFCC39191),
                                                       fontSize: 20.0))),
                                       child: Container(
                                         padding: const EdgeInsets.all(60.0),
@@ -143,7 +165,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                             TextFormField(
                                               controller: _email,
                                               decoration: InputDecoration(
-                                                labelText: "Enter e-mail",
+                                                labelText: "Insira o e-mail",
                                               ),
                                               keyboardType:
                                                   TextInputType.emailAddress,
@@ -151,7 +173,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                             TextFormField(
                                               controller: _pass,
                                               decoration: InputDecoration(
-                                                labelText: "Enter password",
+                                                labelText: "Insira a senha",
                                               ),
                                               keyboardType: TextInputType.text,
                                               obscureText: true,
@@ -162,7 +184,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                             MaterialButton(
                                               height: 40.0,
                                               minWidth: 100.0,
-                                              color: Colors.blue[900],
+                                              color: Color(0xFFCC39191),
                                               textColor: Colors.white70,
                                               child: new Text("Login"),
                                               onPressed: () {

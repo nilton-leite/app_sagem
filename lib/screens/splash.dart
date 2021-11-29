@@ -17,14 +17,14 @@ class _MyAppState extends State<HomePage> {
             seconds: 5,
             navigateAfterSeconds: Dashboard(),
             title: new Text(
-              'Studio Chloe',
+              'Studio Bless',
               style: new TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20.0,
                   color: Colors.white),
             ),
             image: Image.asset(
-              'images/pincel.png',
+              'images/bless_white.png',
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               fit: BoxFit.cover,
