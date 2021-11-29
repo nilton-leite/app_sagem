@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "256166168451",
+    "project_id": "sagem-7fe8a",
+    "storage_bucket": "sagem-7fe8a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:256166168451:android:4a0d956ee98126335718b6",
+        "android_client_info": {
+          "package_name": "com.example.app_sagem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "256166168451-1tg07mgqui5ackapjnigku9gtcsobfl8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcBNA7qOAmt5QXuCYcgAD_BKXl9zrBZ5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "256166168451-1tg07mgqui5ackapjnigku9gtcsobfl8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,7 +4,7 @@ class Service {
   final String id;
   final String title;
   final String description;
-  final int priceDefault;
+  final num priceDefault;
   final int executionTimeDefault;
   final String icon;
   List<Employees> employees;

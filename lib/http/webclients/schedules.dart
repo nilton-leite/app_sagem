@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:app_sagem/http/webclient.dart';
 import 'package:app_sagem/models/schedules.dart';
+import 'package:app_sagem/models/schedules_home.dart';
 import 'package:http/http.dart';
 
 class SchedulesWebClient {
@@ -18,13 +19,27 @@ class SchedulesWebClient {
         .toList();
   }
 
+  Future<List<ScheduleHome>> findSchedulesHome() async {
+    final Response response = await client
+        .get(Uri.parse(
+            baseUrl + '/schedulesUser?userId=6116bf9e1c964e29788db56a'))
+        .timeout(Duration(seconds: 5));
+
+    final List<dynamic> decodedJson = jsonDecode(response.body);
+
+    return decodedJson
+        .map<ScheduleHome>((json) => ScheduleHome.fromJson(json))
+        .toList();
+  }
+
   Future<bool> save(String employeeId, String serviceId, String dataSchedule,
-      String time) async {
+      String time, num price) async {
     final String serviceJson = jsonEncode({
       "employeeId": employeeId,
       "serviceId": serviceId,
       "dataSchedule": dataSchedule,
       "time": time,
+      "price": price,
       "userId": "6116bf9e1c964e29788db56a"
     });
 

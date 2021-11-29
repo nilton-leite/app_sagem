@@ -6,7 +6,7 @@ class Schedule {
   final String telephone;
   final String icon;
   final String service;
-  final int price;
+  final num price;
   final int executionTime;
   List<ServicesSchedule> intervalFinal;
 

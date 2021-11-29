@@ -138,14 +138,12 @@ class RevisionState extends State<Revision> {
             ? Progress()
             : ElevatedButton(
                 onPressed: () async {
-                  print('ANtes do pro');
                   setState(() {
                     isLoading = true;
                   });
 
-                  // return CircularProgressIndicator();
-                  final teste = await _webclient.save(
-                      employeeId, serviceId, dateChoice, scheduleChoice);
+                  final teste = await _webclient.save(employeeId, serviceId,
+                      dateChoice, scheduleChoice, employeeService[0].price);
                   setState(() {
                     if (teste) {
                       isLoading = false;
@@ -158,6 +156,15 @@ class RevisionState extends State<Revision> {
                             Text('Parabéns! Agendamento feito com sucesso!'));
 
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                    final navigator = Navigator.of(context);
+
+                    navigator.popUntil((route) => route.isFirst);
+                    navigator.pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (context) => Dashboard(),
+                        ),
+                        (route) => false);
                   }
                 },
                 child: Text("Finalizar agendamento"),
@@ -172,15 +179,5 @@ class RevisionState extends State<Revision> {
               ),
       ),
     );
-  }
-
-  Widget _showMessage(BuildContext context) {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute<void>(
-    //     builder: (BuildContext context) => Dashboard(),
-    //     fullscreenDialog: true,
-    //   ),
-    // );
   }
 }
