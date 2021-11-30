@@ -3,14 +3,17 @@ import 'package:app_sagem/http/webclient.dart';
 import 'package:app_sagem/models/schedules.dart';
 import 'package:app_sagem/models/schedules_home.dart';
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SchedulesWebClient {
   Future<List<Schedule>> findSchedules(String serviceId, String employeeId,
       DateTime dateStart, DateTime dateEnd) async {
-    final Response response = await client
-        .get(Uri.parse(baseUrl +
-            '/schedules?serviceId=$serviceId&employeeId=$employeeId&start_date=$dateStart&end_date=$dateEnd'))
-        .timeout(Duration(seconds: 5));
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final Response response = await client.get(
+        Uri.parse(baseUrl +
+            '/schedules?serviceId=$serviceId&employeeId=$employeeId&start_date=$dateStart&end_date=$dateEnd'),
+        headers: {"Authorization": token}).timeout(Duration(seconds: 5));
 
     final List<dynamic> decodedJson = jsonDecode(response.body);
 
@@ -20,10 +23,12 @@ class SchedulesWebClient {
   }
 
   Future<List<ScheduleHome>> findSchedulesHome() async {
-    final Response response = await client
-        .get(Uri.parse(
-            baseUrl + '/schedulesUser?userId=6116bf9e1c964e29788db56a'))
-        .timeout(Duration(seconds: 5));
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    final Response response = await client.get(
+        Uri.parse(baseUrl + '/schedulesUser'),
+        headers: {"Authorization": token}).timeout(Duration(seconds: 5));
 
     final List<dynamic> decodedJson = jsonDecode(response.body);
 
@@ -34,18 +39,24 @@ class SchedulesWebClient {
 
   Future<bool> save(String employeeId, String serviceId, String dataSchedule,
       String time, num price) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
     final String serviceJson = jsonEncode({
       "employeeId": employeeId,
       "serviceId": serviceId,
       "dataSchedule": dataSchedule,
       "time": time,
-      "price": price,
-      "userId": "6116bf9e1c964e29788db56a"
+      "price": price
     });
 
     final Response response = await client
         .post(Uri.parse(baseUrl + '/schedules'),
-            headers: {'Content-type': 'application/json'}, body: serviceJson)
+            headers: {
+              'Content-type': 'application/json',
+              "Authorization": token
+            },
+            body: serviceJson)
         .timeout(Duration(seconds: 15));
 
     if (response.statusCode == 200) {

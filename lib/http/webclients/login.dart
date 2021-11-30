@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'package:app_sagem/http/webclient.dart';
-import 'package:app_sagem/models/user.dart';
-import 'package:app_sagem/models/response.dart';
 import 'package:http/http.dart';
 
 class LoginWebClient {
@@ -13,6 +11,24 @@ class LoginWebClient {
     final Map<String, dynamic> decodedJson = jsonDecode(response.body);
 
     return decodedJson;
+  }
+
+  Future<Map<String, dynamic>> login(String email, String tokenFirebase) async {
+    final String serviceJson =
+        jsonEncode({"email": email, "tokenFirebase": tokenFirebase});
+
+    final Response response = await client
+        .post(Uri.parse(baseUrl + '/login'),
+            headers: {'Content-type': 'application/json'}, body: serviceJson)
+        .timeout(Duration(seconds: 15));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> decodedJson = jsonDecode(response.body);
+
+      return decodedJson;
+    }
+
+    throw HttpException(_getMessage(response.statusCode));
   }
 
   Future<Map<String, dynamic>> save(

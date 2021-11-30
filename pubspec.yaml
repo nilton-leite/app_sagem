@@ -37,6 +37,7 @@ dependencies:
   brasil_fields: 
   masked_text: ^0.0.6
   email_validator: '^1.0.0'
+  shared_preferences:
   flutter_localizations:
     sdk: flutter
   

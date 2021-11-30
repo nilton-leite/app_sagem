@@ -63,8 +63,7 @@ class _RegisterPageState extends State<RegisterPage>
 
   void save(BuildContext context) async {
     Map<String, dynamic> validate = validateForm();
-    print('validate');
-    print(validate);
+
     if (!validate['status']) {
       final snackBar = SnackBar(
         content: Text(validate['message']),
@@ -76,7 +75,6 @@ class _RegisterPageState extends State<RegisterPage>
       var snackBar;
       if (resposta['status']) {
         try {
-          print('Aqui antes de ir no firebase');
           UserCredential userCredential = await FirebaseAuth.instance
               .createUserWithEmailAndPassword(
                   email: username, password: password);
@@ -99,8 +97,6 @@ class _RegisterPageState extends State<RegisterPage>
 
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
-          print('user Aqui meu amigo');
-          print(user);
         } on FirebaseAuthException catch (e) {
           if (e.code == 'weak-password') {
             snackBar = SnackBar(
@@ -116,7 +112,6 @@ class _RegisterPageState extends State<RegisterPage>
 
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         } catch (e) {
-          print(e);
           snackBar = SnackBar(
             content: Text('Ops... Campos fornecidos inválidos!'),
             backgroundColor: Colors.redAccent,

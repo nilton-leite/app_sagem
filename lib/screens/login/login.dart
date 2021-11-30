@@ -1,7 +1,9 @@
+import 'package:app_sagem/http/webclients/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:app_sagem/utils/navigator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -22,12 +24,27 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   String get username => _email.text;
   String get password => _pass.text;
 
+  final LoginWebClient _webclient = LoginWebClient();
+
   void doLogin(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+
     if (username.isNotEmpty || password.isNotEmpty) {
       try {
         UserCredential userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: username, password: password);
-        FirebaseAuthAppNavigator.goToHome(context);
+
+        if (userCredential.user.uid.isNotEmpty) {
+          Map<String, dynamic> user =
+              await _webclient.login(username, userCredential.user.uid);
+
+          prefs.setString('id', user['id']);
+          prefs.setString('token', user['token']);
+          prefs.setString('name', user['fullName']);
+          prefs.setString('telephone', user['telephone']);
+
+          FirebaseAuthAppNavigator.goToHome(context);
+        }
       } on FirebaseAuthException catch (e) {
         final snackBar = SnackBar(
           content: Text('Usuário ou senha incorretos'),
