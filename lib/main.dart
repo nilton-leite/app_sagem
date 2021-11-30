@@ -1,6 +1,7 @@
 import 'package:app_sagem/components/progress.dart';
 import 'package:app_sagem/screens/dashboard.dart';
 import 'package:app_sagem/screens/login/login.dart';
+import 'package:app_sagem/screens/login/register.dart';
 import 'package:app_sagem/screens/splash.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -62,6 +63,7 @@ class BlessState extends State<Bless> {
           "/dashboard": (_) => new Dashboard(),
           "/home": (BuildContext context) => HomePage(),
           "/login": (BuildContext context) => LoginPage(),
+          "/register": (BuildContext context) => RegisterPage(),
         });
     // return FutureBuilder(
     //   // Initialize FlutterFire:

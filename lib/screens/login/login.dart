@@ -23,40 +23,31 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   String get password => _pass.text;
 
   void doLogin(BuildContext context) async {
-    // FirebaseAuth auth = FirebaseAuth.instance;
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: username, password: password);
-      print(userCredential);
-      FirebaseAuthAppNavigator.goToHome(context);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text(
-            "Usuário ou senha incorretos",
-            // style: TextStyle(color: Colors.black),
-          ),
+    if (username.isNotEmpty || password.isNotEmpty) {
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: username, password: password);
+        FirebaseAuthAppNavigator.goToHome(context);
+      } on FirebaseAuthException catch (e) {
+        final snackBar = SnackBar(
+          content: Text('Usuário ou senha incorretos'),
           backgroundColor: Colors.redAccent,
-        ));
-      }
-    }
+        );
 
-    // if (username == 'firebase' && password == 'pass') {
-    //   FirebaseAuthAppNavigator.goToHome(context);
-    // } else {
-    //   Scaffold.of(context).showSnackBar(SnackBar(
-    //     content: Text(
-    //       "Usuário ou senha incorretos",
-    //       // style: TextStyle(color: Colors.black),
-    //     ),
-    //     backgroundColor: Colors.redAccent,
-    //   ));
-    // }
-    // FocusScope.of(context).requestFocus(new FocusNode());
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    } else {
+      final snackBar = SnackBar(
+        content: Text('Ops... Campos fornecidos inválidos!'),
+        backgroundColor: Colors.redAccent,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 
   void register(BuildContext context) {
-    return;
+    FirebaseAuthAppNavigator.goToRegister(context);
   }
 
   Future<Null> _playAnimation() async {
@@ -89,11 +80,13 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     _iconAnimation.addListener(() => this.setState(() {}));
 
     _playAnimation();
+
+    _email.clear();
+    _pass.clear();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _formAnimationController.dispose();
     super.dispose();
   }
@@ -113,107 +106,89 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       900: Color.fromRGBO(136, 14, 79, 1),
     };
     return Scaffold(
-        backgroundColor: Colors.black,
-        body: Builder(
-            builder: (context) => GestureDetector(
-                  onTap: () =>
-                      FocusScope.of(context).requestFocus(new FocusNode()),
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: <Widget>[
-                      Image(
-                        image: new AssetImage("images/bless_white.png"),
-                        fit: BoxFit.cover,
-                        color: Colors.black54,
-                        colorBlendMode: BlendMode.darken,
-                      ),
-                      Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+      backgroundColor: Colors.black,
+      body: Builder(
+        builder: (context) => GestureDetector(
+          onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
+          child: Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              Image(
+                image: new AssetImage("images/bless_white.png"),
+                fit: BoxFit.cover,
+                color: Colors.black54,
+                colorBlendMode: BlendMode.darken,
+              ),
+              Column(mainAxisAlignment: MainAxisAlignment.center, children: <
+                  Widget>[
+                FadeTransition(
+                  opacity: _formAnimation,
+                  child: Form(
+                    child: Theme(
+                      data: ThemeData(
+                          brightness: Brightness.dark,
+                          primarySwatch:
+                              MaterialColor(0xFFCC39191, color), //Colors.blue,
+                          inputDecorationTheme: InputDecorationTheme(
+                              labelStyle: TextStyle(
+                                  color: Color(0xFFCC39191), fontSize: 20.0))),
+                      child: Container(
+                        padding: const EdgeInsets.all(60.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            // Image(
-                            //   image: new AssetImage("images/bless.png"),
-                            //   // size: _iconAnimation.value * 100,
-                            //   // fit: BoxFit.cover,
-                            //   // color: Colors.black54,
-                            //   // colorBlendMode: BlendMode.darken,
-                            // ),
-                            //TODO: Colocar o Logo da Grippen com a animação
-                            // FlutterLogo(
-                            //   size: _iconAnimation.value * 100,
-                            // ),
-
-                            FadeTransition(
-                              opacity: _formAnimation,
-                              child: Form(
-                                  child: Theme(
-                                      data: ThemeData(
-                                          brightness: Brightness.dark,
-                                          primarySwatch: MaterialColor(
-                                              0xFFCC39191,
-                                              color), //Colors.blue,
-                                          inputDecorationTheme:
-                                              InputDecorationTheme(
-                                                  labelStyle: TextStyle(
-                                                      color: Color(0xFFCC39191),
-                                                      fontSize: 20.0))),
-                                      child: Container(
-                                        padding: const EdgeInsets.all(60.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            TextFormField(
-                                              controller: _email,
-                                              decoration: InputDecoration(
-                                                labelText: "Insira o e-mail",
-                                              ),
-                                              keyboardType:
-                                                  TextInputType.emailAddress,
-                                            ),
-                                            TextFormField(
-                                              controller: _pass,
-                                              decoration: InputDecoration(
-                                                labelText: "Insira a senha",
-                                              ),
-                                              keyboardType: TextInputType.text,
-                                              obscureText: true,
-                                            ),
-                                            Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 20.0)),
-                                            MaterialButton(
-                                              height: 40.0,
-                                              minWidth: 100.0,
-                                              color: Color(0xFFCC39191),
-                                              textColor: Colors.white70,
-                                              child: new Text("Login"),
-                                              onPressed: () {
-                                                doLogin(context);
-                                              },
-                                              splashColor: Colors.blue,
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 10.0),
-                                            ),
-                                            MaterialButton(
-                                              height: 40.0,
-                                              minWidth: 100.0,
-                                              color: Colors.black45,
-                                              textColor: Colors.white70,
-                                              child: new Text("Register"),
-                                              onPressed: () {
-                                                register(context);
-                                              },
-                                              splashColor: Colors.blue,
-                                            )
-                                          ],
-                                        ),
-                                      ))),
+                            TextFormField(
+                              controller: _email,
+                              decoration: InputDecoration(
+                                labelText: "Insira o e-mail",
+                              ),
+                              keyboardType: TextInputType.emailAddress,
                             ),
-                          ])
-                    ],
+                            TextFormField(
+                              controller: _pass,
+                              decoration: InputDecoration(
+                                labelText: "Insira a senha",
+                              ),
+                              keyboardType: TextInputType.text,
+                              obscureText: true,
+                            ),
+                            Padding(padding: const EdgeInsets.only(top: 20.0)),
+                            MaterialButton(
+                              height: 40.0,
+                              minWidth: 100.0,
+                              color: Color(0xFFCC39191),
+                              textColor: Colors.white70,
+                              child: new Text("Entrar"),
+                              onPressed: () {
+                                doLogin(context);
+                              },
+                              splashColor: Colors.blue,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10.0),
+                            ),
+                            MaterialButton(
+                              height: 40.0,
+                              minWidth: 100.0,
+                              color: Colors.black45,
+                              textColor: Colors.white70,
+                              child: new Text("Cadastrar"),
+                              onPressed: () {
+                                register(context);
+                              },
+                              splashColor: Color(0xFFCC39191),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                )));
+                ),
+              ])
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
