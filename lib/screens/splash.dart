@@ -1,5 +1,7 @@
 import 'package:app_sagem/screens/dashboard.dart';
+import 'package:app_sagem/screens/login/login.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splashscreen/splashscreen.dart';
 
 class HomePage extends StatefulWidget {
@@ -8,6 +10,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _MyAppState extends State<HomePage> {
+  int isLogado = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _isLogado();
+  }
+
+  void _isLogado() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isLogado = (prefs.getString('token') != null ? 1 : 0);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,7 +32,7 @@ class _MyAppState extends State<HomePage> {
         children: <Widget>[
           SplashScreen(
             seconds: 5,
-            navigateAfterSeconds: Dashboard(),
+            navigateAfterSeconds: isLogado == 1 ? Dashboard() : LoginPage(),
             image: Image.asset(
               'images/bless_white.png',
               width: MediaQuery.of(context).size.width,
@@ -26,7 +43,7 @@ class _MyAppState extends State<HomePage> {
             styleTextUnderTheLoader: new TextStyle(),
             photoSize: 100.0,
             onClick: () => print("Flutter Egypt"),
-            loaderColor: Colors.amber[800],
+            loaderColor: Color(0xFFCC39191),
           )
         ],
       ),
