@@ -16,13 +16,6 @@ class _MyAppState extends State<HomePage> {
           SplashScreen(
             seconds: 5,
             navigateAfterSeconds: Dashboard(),
-            title: new Text(
-              'Studio Bless',
-              style: new TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0,
-                  color: Colors.white),
-            ),
             image: Image.asset(
               'images/bless_white.png',
               width: MediaQuery.of(context).size.width,
