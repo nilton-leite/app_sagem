@@ -315,6 +315,18 @@ class _CardHomeState extends State<CardHome> {
 
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(snackBar);
+                                      } else {
+                                        final snackBar = SnackBar(
+                                          content: Text(cancel['message']),
+                                          backgroundColor: Color(0xFFCC39191),
+                                        );
+
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+
+                                        setState(() {
+                                          searchText;
+                                        });
                                       }
                                     },
                             ),
