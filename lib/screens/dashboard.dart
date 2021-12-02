@@ -74,7 +74,7 @@ class _MyStatefulWidgetState extends State<Dashboard> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Color(0xFFCC39191),
         onTap: _onItemTapped,
       ),
     );

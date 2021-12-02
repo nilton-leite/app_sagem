@@ -22,13 +22,20 @@ class SchedulesWebClient {
         .toList();
   }
 
-  Future<List<ScheduleHome>> findSchedulesHome() async {
+  Future<List<ScheduleHome>> findSchedulesHome(
+      [String text, String serviceId]) async {
+    if (text == null || serviceId == null) {
+      text = '';
+      serviceId = '';
+    }
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
 
     final Response response = await client.get(
-        Uri.parse(baseUrl + '/schedulesUser'),
+        Uri.parse(baseUrl + '/schedulesUser?text=$text&serviceId=$serviceId'),
         headers: {"Authorization": token}).timeout(Duration(seconds: 5));
+
+    print(response.body);
 
     final List<dynamic> decodedJson = jsonDecode(response.body);
 

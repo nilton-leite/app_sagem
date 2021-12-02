@@ -60,7 +60,7 @@ class _CardServiceState extends State<CardService> {
                       children: <Widget>[
                         DynamicIcon(
                           services[index].icon,
-                          color: Colors.amber[800],
+                          color: Color(0xFFCC39191),
                           size: 50.0,
                         ),
                         // Icon(Icons.ac_unit_rounded, size: 80.0, color: Colors.amber[800]),

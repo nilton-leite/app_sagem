@@ -7,8 +7,8 @@ class ScheduleHome {
   final String dataSchedule;
   final String time;
   final num price;
-  List<Employees> employees;
-  List<ServicesHome> services;
+  Map<String, dynamic> employees;
+  Map<String, dynamic> services;
 
   ScheduleHome(
     this.id,
@@ -24,18 +24,20 @@ class ScheduleHome {
         dataSchedule = json['dataSchedule'],
         time = json['time'],
         price = json['price'],
-        employees = List<Employees>.from(
-            json['employees'].map((x) => Employees.fromJson(x))),
-        services = List<ServicesHome>.from(
-            json['services'].map((x) => ServicesHome.fromJson(x)));
+        employees = json[
+            'employees'], //List<Employees>.from(json['employees'].map((x) => Employees.fromJson(x))),
+        services = json[
+            'services']; //List<ServicesHome>.from(json['services'].map((x) => ServicesHome.fromJson(x)));
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'dataSchedule': dataSchedule,
         'time': time,
         'price': price,
-        'employees': List<dynamic>.from(employees.map((x) => x.toJson())),
-        'services': List<dynamic>.from(services.map((x) => x.toJson()))
+        'employees':
+            employees, //List<dynamic>.from(employees.map((x) => x.toJson())),
+        'services':
+            services //List<dynamic>.from(services.map((x) => x.toJson()))
       };
 
   @override
