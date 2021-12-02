@@ -6,6 +6,7 @@ class ScheduleHome {
   final String id;
   final String dataSchedule;
   final String time;
+  final bool cancel;
   final num price;
   Map<String, dynamic> employees;
   Map<String, dynamic> services;
@@ -15,6 +16,7 @@ class ScheduleHome {
     this.dataSchedule,
     this.time,
     this.price,
+    this.cancel,
     this.employees,
     this.services,
   );
@@ -24,6 +26,7 @@ class ScheduleHome {
         dataSchedule = json['dataSchedule'],
         time = json['time'],
         price = json['price'],
+        cancel = json['cancel'],
         employees = json[
             'employees'], //List<Employees>.from(json['employees'].map((x) => Employees.fromJson(x))),
         services = json[
@@ -34,6 +37,7 @@ class ScheduleHome {
         'dataSchedule': dataSchedule,
         'time': time,
         'price': price,
+        'cancel': cancel,
         'employees':
             employees, //List<dynamic>.from(employees.map((x) => x.toJson())),
         'services':

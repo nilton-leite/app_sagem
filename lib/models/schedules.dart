@@ -2,6 +2,7 @@ import 'package:app_sagem/models/service_schedule.dart';
 import 'package:intl/intl.dart';
 
 class Schedule {
+  final String id;
   final String fullName;
   final String telephone;
   final String icon;
@@ -11,6 +12,7 @@ class Schedule {
   List<ServicesSchedule> intervalFinal;
 
   Schedule(
+    this.id,
     this.fullName,
     this.telephone,
     this.icon,
@@ -21,7 +23,8 @@ class Schedule {
   );
 
   Schedule.fromJson(Map<String, dynamic> json)
-      : fullName = json['fullName'],
+      : id = json['_id'],
+        fullName = json['fullName'],
         telephone = json['telephone'],
         icon = json['icon'],
         service = json['service'],
@@ -31,6 +34,7 @@ class Schedule {
             json['intervalFinal'].map((x) => ServicesSchedule.fromJson(x)));
 
   Map<String, dynamic> toJson() => {
+        'id': id,
         'fullName': fullName,
         'telephone': telephone,
         'icon': icon,
@@ -43,7 +47,7 @@ class Schedule {
 
   @override
   String toString() {
-    return 'Services{date: $fullName, times: $telephone}';
+    return 'Schedules{date: $fullName, times: $telephone}';
   }
 
   String getCurrency() {

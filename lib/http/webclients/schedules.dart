@@ -35,8 +35,6 @@ class SchedulesWebClient {
         Uri.parse(baseUrl + '/schedulesUser?text=$text&serviceId=$serviceId'),
         headers: {"Authorization": token}).timeout(Duration(seconds: 5));
 
-    print(response.body);
-
     final List<dynamic> decodedJson = jsonDecode(response.body);
 
     return decodedJson
@@ -73,6 +71,23 @@ class SchedulesWebClient {
     throw HttpException(_getMessage(response.statusCode));
   }
 
+  Future<Map<String, dynamic>> cancel(String scheduleId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    final Response response = await client.get(
+        Uri.parse(baseUrl + '/schedules/cancel?scheduleId=$scheduleId'),
+        headers: {"Authorization": token}).timeout(Duration(seconds: 5));
+
+    if (response.statusCode == 200 || response.statusCode == 400) {
+      final Map<String, dynamic> decodedJson = jsonDecode(response.body);
+
+      return decodedJson;
+    }
+
+    throw HttpException(_getMessage(response.statusCode));
+  }
+
   String _getMessage(int statusCode) {
     if (_statusCodeResponses.containsKey(statusCode)) {
       return _statusCodeResponses[statusCode];
@@ -82,7 +97,8 @@ class SchedulesWebClient {
 
   static final Map<int, String> _statusCodeResponses = {
     401: 'Falha na autenticação!',
-    502: 'Ocorreu um erro ao buscar os serviços'
+    502: 'Ocorreu um erro ao buscar os serviços',
+    404: 'Serviço indisponivel no momento'
   };
 }
 

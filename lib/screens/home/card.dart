@@ -107,7 +107,7 @@ class _CardHomeState extends State<CardHome> {
               borderRadius: BorderRadius.circular(25.0),
             ),
             hintStyle: TextStyle(color: Color(0xFFCC39191)),
-            hintText: "Pesquise",
+            hintText: "Nome da atendente...",
             suffixIcon: IconButton(
               onPressed: () {
                 setState(() {
@@ -151,17 +151,6 @@ class _CardHomeState extends State<CardHome> {
                 "employees": []
               };
               Service teste = Service.fromJson(todes);
-              // List<Service> serviceJson = jsonDecode(jsonEncode({
-              //   "id": "619edf4b85b51c24348a2fb8",
-              //   "active": true,
-              //   "title": "Todos",
-              //   "description": "",
-              //   "price_default": 0,
-              //   "execution_time_default": 0,
-              //   "icon": "null",
-              //   "employees": []
-              // }));
-              // services.add(teste);
               services.insert(0, teste);
               return Container(
                 margin: EdgeInsets.symmetric(vertical: 20.0),
@@ -213,94 +202,6 @@ class _CardHomeState extends State<CardHome> {
         return Text('Elaia 2');
       },
     );
-    // return Container(
-    //   margin: EdgeInsets.symmetric(vertical: 20.0),
-    //   height: 50.0,
-    //   child: ListView(
-    //     scrollDirection: Axis.horizontal,
-    //     children: <Widget>[
-    //       Container(
-    //         margin: const EdgeInsets.only(left: 20),
-    //         child: TextButton(
-    //           child: Text(
-    //             "Makeup",
-    //             style: TextStyle(fontSize: 14),
-    //           ),
-    //           style: ButtonStyle(
-    //             padding: MaterialStateProperty.all<EdgeInsets>(
-    //               EdgeInsets.all(10),
-    //             ),
-    //             backgroundColor: MaterialStateProperty.all<Color>(
-    //               Color(0xFFF0EBE1),
-    //             ),
-    //             foregroundColor:
-    //                 MaterialStateProperty.all<Color>(Color(0xFFCC39191)),
-    //             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-    //               RoundedRectangleBorder(
-    //                 borderRadius: BorderRadius.circular(20.0),
-    //                 // side: BorderSide(color: Colors.black),
-    //               ),
-    //             ),
-    //           ),
-    //           onPressed: () => null,
-    //         ),
-    //       ),
-    //       Container(
-    //         margin: const EdgeInsets.only(left: 20),
-    //         child: TextButton(
-    //           child: Text(
-    //             "Sobrancelha",
-    //             style: TextStyle(fontSize: 14),
-    //           ),
-    //           style: ButtonStyle(
-    //             padding: MaterialStateProperty.all<EdgeInsets>(
-    //               EdgeInsets.all(10),
-    //             ),
-    //             backgroundColor: MaterialStateProperty.all<Color>(
-    //               Color(0xFFF0EBE1),
-    //             ),
-    //             foregroundColor:
-    //                 MaterialStateProperty.all<Color>(Color(0xFFCC39191)),
-    //             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-    //               RoundedRectangleBorder(
-    //                 borderRadius: BorderRadius.circular(18.0),
-    //                 // side: BorderSide(color: Colors.black),
-    //               ),
-    //             ),
-    //           ),
-    //           onPressed: () => null,
-    //         ),
-    //       ),
-    //       Container(
-    //         margin: const EdgeInsets.only(left: 20),
-    //         child: TextButton(
-    //           child: Text(
-    //             "Mão + Pé",
-    //             style: TextStyle(fontSize: 14),
-    //           ),
-    //           style: ButtonStyle(
-    //             padding: MaterialStateProperty.all<EdgeInsets>(
-    //               EdgeInsets.all(10),
-    //             ),
-    //             backgroundColor: MaterialStateProperty.all<Color>(
-    //               Color(0xFFF0EBE1),
-    //             ),
-    //             foregroundColor: MaterialStateProperty.all<Color>(
-    //               Color(0xFFCC39191),
-    //             ),
-    //             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-    //               RoundedRectangleBorder(
-    //                 borderRadius: BorderRadius.circular(18.0),
-    //                 // side: BorderSide(color: Colors.black),
-    //               ),
-    //             ),
-    //           ),
-    //           onPressed: () => null,
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 
   Flexible _cardsSchedules() {
@@ -317,9 +218,7 @@ class _CardHomeState extends State<CardHome> {
             return Padding(
               padding: const EdgeInsets.all(10.0),
               child: InkWell(
-                onTap: () {
-                  print('Teste');
-                },
+                onTap: () => null,
                 child: Card(
                   color: Color(0xFFFBFBFB),
                   clipBehavior: Clip.antiAlias,
@@ -387,19 +286,37 @@ class _CardHomeState extends State<CardHome> {
                                   EdgeInsets.all(10),
                                 ),
                                 foregroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.redAccent),
-                                shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                    // side: BorderSide(color: Colors.black),
-                                  ),
+                                    MaterialStateProperty.resolveWith<Color>(
+                                  (Set<MaterialState> states) {
+                                    if (states.contains(MaterialState.pressed))
+                                      return Colors.green;
+                                    else if (states
+                                        .contains(MaterialState.disabled))
+                                      return Colors.redAccent.withOpacity(0.10);
+                                    return Colors
+                                        .redAccent; // Use the component's default.
+                                  },
                                 ),
                               ),
-                              onPressed: () {
-                                print('Cancelar aqui');
-                              },
+                              onPressed: !scheduleHome[index].cancel
+                                  ? null
+                                  : () async {
+                                      print('Cancelar aqui');
+                                      Map<String, dynamic> cancel =
+                                          await _webclient
+                                              .cancel(scheduleHome[index].id);
+                                      print(cancel);
+
+                                      if (!cancel['status']) {
+                                        final snackBar = SnackBar(
+                                          content: Text(cancel['message']),
+                                          backgroundColor: Colors.redAccent,
+                                        );
+
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                      }
+                                    },
                             ),
                           ],
                         ),
