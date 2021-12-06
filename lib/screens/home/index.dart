@@ -14,9 +14,7 @@ class IndexHome extends StatefulWidget {
 }
 
 class _IndexHomeState extends State<IndexHome> {
-  static final TextEditingController _search = new TextEditingController();
-
-  String get searchText => _search.text;
+  String searchText;
   String serviceId;
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
@@ -24,10 +22,11 @@ class _IndexHomeState extends State<IndexHome> {
   final SchedulesWebClient _webclient = SchedulesWebClient();
   List<ScheduleHome> scheduleHome = [];
 
-  @override
-  void initState() {
-    super.initState();
-    _search.clear();
+  callback(newValue, type) {
+    setState(() {
+      if (type == 0) searchText = newValue;
+      if (type == 1) serviceId = newValue;
+    });
   }
 
   @override
@@ -74,15 +73,8 @@ class _IndexHomeState extends State<IndexHome> {
                       Padding(
                         padding: const EdgeInsets.only(top: 10),
                       ),
-                      Search(
-                        function: () {
-                          setState(() {
-                            searchText;
-                          });
-                        },
-                        search: _search,
-                      ),
-                      ServicesHome(),
+                      Search(function: callback),
+                      ServicesHome(function: callback),
                       Divider(
                         height: 20,
                         thickness: 1,
@@ -90,17 +82,11 @@ class _IndexHomeState extends State<IndexHome> {
                         endIndent: 20,
                       ),
                       CardHome(
-                        scheduleHome: scheduleHome,
-                        searchText: searchText,
-                        search: _search,
-                        refreshIndicatorKey: _refreshIndicatorKey,
-                        isEmpty: scheduleHome.length > 0 ? false : true,
-                        refresh: () {
-                          setState(() {
-                            searchText;
-                          });
-                        },
-                      )
+                          scheduleHome: scheduleHome,
+                          searchText: searchText,
+                          refreshIndicatorKey: _refreshIndicatorKey,
+                          isEmpty: scheduleHome.length > 0 ? false : true,
+                          function: callback)
                       // _cardsSchedules(),
                     ],
                   ),

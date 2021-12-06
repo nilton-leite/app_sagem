@@ -5,6 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ServicesHome extends StatefulWidget {
+  final Function(String, int) function;
+
+  const ServicesHome({Key key, this.function}) : super(key: key);
   @override
   _ServicesHomeState createState() => _ServicesHomeState();
 }
@@ -73,9 +76,7 @@ class _ServicesHomeState extends State<ServicesHome> {
                           ),
                         ),
                         onPressed: () {
-                          setState(() {
-                            serviceId = services[index].id;
-                          });
+                          return widget.function(services[index].id, 1);
                         },
                       ),
                     );

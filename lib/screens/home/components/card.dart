@@ -13,7 +13,7 @@ class CardHome extends StatefulWidget {
   final GlobalKey<RefreshIndicatorState> refreshIndicatorKey;
   final String searchText;
   final TextEditingController search;
-  final Function() refresh;
+  final Function(String, int) function;
   const CardHome(
       {Key key,
       this.scheduleHome,
@@ -21,7 +21,7 @@ class CardHome extends StatefulWidget {
       this.refreshIndicatorKey,
       this.searchText,
       this.search,
-      this.refresh})
+      this.function})
       : super(key: key);
 
   @override
@@ -42,7 +42,7 @@ class _CardHomeState extends State<CardHome> {
             textButton: 'Recarregar',
             textState: null,
             function: () {
-              widget.refresh();
+              widget.function(null, 0);
             },
           )
         : Flexible(
@@ -53,7 +53,7 @@ class _CardHomeState extends State<CardHome> {
                   key: widget.refreshIndicatorKey,
                   child: ListView.builder(
                     shrinkWrap: true,
-                    physics: const AlwaysScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: widget.scheduleHome.length,
                     padding: const EdgeInsets.only(top: 10.0),
                     itemBuilder: (context, index) {
@@ -184,7 +184,7 @@ class _CardHomeState extends State<CardHome> {
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(snackBar);
 
-                                                  widget.refresh();
+                                                  widget.function(null, 0);
                                                 }
                                               },
                                       ),
@@ -208,6 +208,6 @@ class _CardHomeState extends State<CardHome> {
   }
 
   Future<void> _refreshCards() async {
-    widget.refresh();
+    widget.function(null, 0);
   }
 }
