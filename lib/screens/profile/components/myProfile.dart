@@ -6,10 +6,12 @@ import 'package:app_sagem/models/user.dart';
 import 'package:app_sagem/screens/home/components/card.dart';
 import 'package:app_sagem/screens/home/components/search.dart';
 import 'package:app_sagem/screens/home/components/services.dart';
+import 'package:app_sagem/utils/color.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:masked_text/masked_text.dart';
 
 class MyProfile extends StatefulWidget {
   const MyProfile({
@@ -23,6 +25,20 @@ class MyProfile extends StatefulWidget {
 class _MyProfileState extends State<MyProfile> {
   final UserWebClient _webclient = UserWebClient();
   List<UserBless> user = [];
+
+  static final TextEditingController _name = new TextEditingController();
+  static final TextEditingController _telephone = new TextEditingController();
+  static final TextEditingController _email = new TextEditingController();
+  static final TextEditingController _pass = new TextEditingController();
+  static final TextEditingController _confirmPass = new TextEditingController();
+
+  String get name => _name.text;
+  String get telephone => _telephone.text;
+  String get username => _email.text;
+  String get password => _pass.text;
+  String get confirmPassword => _confirmPass.text;
+
+  Map<int, Color> color = MapColor.getColor();
 
   @override
   Widget build(BuildContext context) {
@@ -58,14 +74,100 @@ class _MyProfileState extends State<MyProfile> {
             case ConnectionState.done:
               if (snapshot.hasData) {
                 user = snapshot.data;
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                    ),
-                    // _cardsSchedules(),
-                  ],
+                return SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Form(
+                        child: Theme(
+                          data: ThemeData(
+                            brightness: Brightness.dark,
+                            primarySwatch: MaterialColor(
+                                0xFFCC39191, color), //Colors.blue,
+                            inputDecorationTheme: InputDecorationTheme(
+                              labelStyle: TextStyle(
+                                  color: Color(0xFFCC39191), fontSize: 20.0),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xFFCC39191),
+                                ),
+                              ),
+                            ),
+                          ),
+                          child: Container(
+                            // margin: const EdgeInsets.only(top: 150.0),
+                            padding: const EdgeInsets.all(60.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                TextFormField(
+                                  controller: _name,
+                                  decoration: InputDecoration(
+                                    labelText: "Nome",
+                                  ),
+                                  keyboardType: TextInputType.text,
+                                ),
+                                new MaskedTextField(
+                                  maskedTextFieldController: _telephone,
+                                  mask: "(xx) xxxxx-xxxx",
+                                  maxLength: 15,
+                                  keyboardType: TextInputType.phone,
+                                  inputDecoration: new InputDecoration(
+                                      labelText: "Telefone"),
+                                ),
+                                TextFormField(
+                                  controller: _email,
+                                  decoration: InputDecoration(
+                                    labelText: "E-mail",
+                                  ),
+                                  keyboardType: TextInputType.emailAddress,
+                                ),
+                                TextFormField(
+                                  controller: _pass,
+                                  decoration: InputDecoration(
+                                    labelText: "Senha",
+                                  ),
+                                  keyboardType: TextInputType.text,
+                                  obscureText: true,
+                                ),
+                                TextFormField(
+                                  controller: _confirmPass,
+                                  decoration: InputDecoration(
+                                    labelText: "Confirme a Senha",
+                                  ),
+                                  keyboardType: TextInputType.text,
+                                  obscureText: true,
+                                ),
+                                Padding(
+                                    padding: const EdgeInsets.only(top: 20.0)),
+                                ElevatedButton(
+                                  child: new Text("Alterar dados"),
+                                  onPressed: () {
+                                    print('OOOOOI');
+                                    // save(context);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Color(0xFFCC39191),
+                                    elevation: 1, //elevation of button
+                                    shape: RoundedRectangleBorder(
+                                      //to set border radius to button
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    padding: EdgeInsets.all(15),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 10.0),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                      // _cardsSchedules(),
+                    ],
+                  ),
                 );
               }
               return Empty(
