@@ -6,7 +6,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,9 +29,9 @@ class BlessState extends State<Bless> {
         GlobalWidgetsLocalizations.delegate,
       ],
       supportedLocales: [
-        const Locale('pt'),
+        const Locale('pt', 'BR'),
       ],
-      locale: const Locale('pt'),
+      // locale: const Locale('pt', 'BR'),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.white,

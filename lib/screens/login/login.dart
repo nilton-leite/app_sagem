@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
           FirebaseAuthAppNavigator.goToHome(context);
         }
-      } on FirebaseAuthException catch (e) {
+      } on FirebaseAuthException {
         final snackBar = SnackBar(
           content: Text('Usuário ou senha incorretos'),
           backgroundColor: Colors.redAccent,

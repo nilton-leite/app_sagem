@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:app_sagem/utils/navigator.dart';
-import 'package:app_sagem/models/user.dart';
 import 'package:masked_text/masked_text.dart';
 
 class RegisterPage extends StatefulWidget {

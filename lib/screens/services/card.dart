@@ -1,93 +1,207 @@
 import 'package:app_sagem/components/dynamic_icon.dart';
+import 'package:app_sagem/components/progress.dart';
 import 'package:app_sagem/components/title_bottom_sheet.dart';
+import 'package:app_sagem/http/webclients/services.dart';
 import 'package:app_sagem/models/service.dart';
 import 'package:app_sagem/screens/services/service_schedule.dart';
+import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CardService extends StatefulWidget {
-  final List<Service> services;
-  final TextStyle optionStyle;
   const CardService({
     Key key,
-    this.services,
-    this.optionStyle,
   }) : super(key: key);
 
   @override
-  _CardServiceState createState() =>
-      _CardServiceState(this.optionStyle, this.services);
+  _CardServiceState createState() => _CardServiceState();
 }
 
-class _CardServiceState extends State<CardService> {
-  final List<Service> services;
-  final TextStyle optionStyle;
-  _CardServiceState(this.optionStyle, this.services);
+class _CardServiceState extends State<CardService>
+    with TickerProviderStateMixin {
+  AnimationController controller;
+  GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
+  final ServicesWebClient _webclient = ServicesWebClient();
+
+  List<Service> services = [];
+  String groupValueRadioList = '';
+
+  Future<void> _refreshServices() async {
+    setState(() {});
+  }
+
+  @override
+  initState() {
+    super.initState();
+    controller = BottomSheet.createAnimationController(this);
+    controller.duration = Duration(seconds: 2);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 300,
-          childAspectRatio: 3 / 3,
-          crossAxisSpacing: 20,
-          mainAxisSpacing: 10),
-      itemBuilder: (contextGrid, index) {
-        final Service service = services[index];
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Container(
-            child: InkWell(
-              onTap: () {
-                _showModalBottomSheet(context, service);
-              },
-              child: Card(
-                semanticContainer: true,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  side: BorderSide(
-                    color: Colors.grey.withOpacity(0.5),
-                    width: 2,
-                  ),
-                ),
-                color: Colors.white,
-                child: Center(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        DynamicIcon(
-                          services[index].icon,
-                          color: Color(0xFFCC39191),
-                          size: 50.0,
+    return Scaffold(
+      backgroundColor: Color(0xFFF6F3EE),
+      body: FutureBuilder<List>(
+        initialData: [],
+        future: _webclient?.findAll(),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              break;
+            case ConnectionState.waiting:
+              return Progress();
+            case ConnectionState.active:
+              break;
+            case ConnectionState.done:
+              if (snapshot.hasData) {
+                services = snapshot.data;
+                if (services.isNotEmpty) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 40, left: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              'Serviços',
+                              style: GoogleFonts.dancingScript(
+                                textStyle: TextStyle(
+                                  color: Color(0xFFCC39191),
+                                  letterSpacing: .5,
+                                  fontSize: 40,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        // Icon(Icons.ac_unit_rounded, size: 80.0, color: Colors.amber[800]),
-                        Text(
-                          services[index].title,
-                          style: optionStyle,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-      itemCount: services.length,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                      ),
+                      Divider(
+                        height: 20,
+                        thickness: 1,
+                        indent: 20,
+                        endIndent: 20,
+                      ),
+                      // _expansionServices(),
+                      _cardsServices()
+                    ],
+                  );
+                }
+              }
+              return Text('Elaia');
+          }
+          return Text('Elaia 2');
+        },
+      ),
     );
   }
 
-  String groupValueRadioList;
+  Widget _cardsServices() {
+    if (services.length > 0) {
+      return Flexible(
+        child: Container(
+          padding: EdgeInsets.all(5),
+          width: double.infinity,
+          child: RefreshIndicator(
+              key: _refreshIndicatorKey,
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: services.length,
+                padding: const EdgeInsets.only(top: 10.0),
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: InkWell(
+                      onTap: () =>
+                          _showModalBottomSheet(context, services[index]),
+                      child: Card(
+                        color: Color(0xFFFBFBFB),
+                        clipBehavior: Clip.antiAlias,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Column(
+                          children: [
+                            ListTile(
+                              leading: DynamicIcon(
+                                services[index].icon,
+                                color: Color(0xFFCC39191),
+                                size: 45.0,
+                              ),
+                              trailing: Icon(Icons.chevron_right_sharp),
+                              title: Text(services[index].title),
+                              subtitle: Text(services[index].description),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+              onRefresh: _refreshServices),
+        ),
+      );
+    } else {
+      return Column(
+        children: [
+          Center(
+            child: EmptyWidget(
+              image: null,
+              packageImage: PackageImage.Image_3,
+              title: 'Sem agendamentos',
+              subTitle: 'Não encontramos agendamentos pendentes!',
+              hideBackgroundAnimation: true,
+              titleTextStyle: TextStyle(
+                fontSize: 22,
+                color: Color(0xFFCC39191),
+                fontWeight: FontWeight.w500,
+              ),
+              subtitleTextStyle: TextStyle(
+                fontSize: 14,
+                color: Color(0xFFCC39191),
+              ),
+            ),
+          ),
+          Center(
+            child: ElevatedButton(
+              child: Text('Recarregar'),
+              style: ElevatedButton.styleFrom(
+                primary: Color(0xFFCC39191),
+                elevation: 1,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                padding: EdgeInsets.all(15),
+              ),
+              onPressed: () {
+                setState(() {});
+              },
+            ),
+          ),
+        ],
+      );
+    }
+  }
 
   void _showModalBottomSheet(BuildContext context, Service service) {
     final TextStyle styleTitle = TextStyle(
       fontSize: 28,
       fontWeight: FontWeight.bold,
-      color: Colors.amber[800],
+      color: Color(0xFFCC39191),
     );
     showModalBottomSheet(
       context: context,
@@ -95,6 +209,7 @@ class _CardServiceState extends State<CardService> {
       useRootNavigator: true,
       isScrollControlled: true,
       isDismissible: true,
+      transitionAnimationController: controller,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(20.0),
@@ -108,12 +223,11 @@ class _CardServiceState extends State<CardService> {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(contextBuilder).viewInsets.bottom),
             child: Container(
-              height: MediaQuery.of(contextBuilder).size.height * 0.50,
+              height: MediaQuery.of(contextBuilder).size.height * 0.30,
               child: Column(
                 children: <Widget>[
                   TitleBottomSheet(title: service.title, style: styleTitle),
                   _listViewBottomSheet(service, setState),
-                  _buttonBottomSheet(context, service),
                 ],
               ),
             ),
@@ -133,7 +247,7 @@ class _CardServiceState extends State<CardService> {
           itemBuilder: (context, index) {
             return Theme(
               data: ThemeData(
-                unselectedWidgetColor: Colors.amber[800],
+                unselectedWidgetColor: Color(0xFFCC39191),
               ),
               child: RadioListTile<String>(
                 title: Text(service.employees[index].fullName),
@@ -143,50 +257,30 @@ class _CardServiceState extends State<CardService> {
                   setState(() {
                     groupValueRadioList = choice;
                   });
+
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ServiceSchedule(groupValueRadioList, service.id),
+                    ),
+                  );
                 },
                 // ignore: unrelated_type_equality_checks
                 selected: groupValueRadioList == index,
                 toggleable: true,
                 subtitle: Text(
                     service.employees[index].description ?? 'A seu dispor'),
-                secondary: Icon(Icons.person),
+                secondary: Icon(
+                  Icons.person,
+                  color: Color(0xFFCC39191),
+                  size: 40.0,
+                ),
                 controlAffinity: ListTileControlAffinity.trailing,
-                activeColor: Colors.amber[800],
+                activeColor: Color(0xFFCC39191),
               ),
             );
           },
         ),
-      ),
-    );
-  }
-
-  Center _buttonBottomSheet(BuildContext context, Service service) {
-    return Center(
-      child: Column(
-        children: <Widget>[
-          SizedBox(
-            width: 400,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        ServiceSchedule(groupValueRadioList, service.id),
-                  ),
-                );
-              },
-              child: Text("Continuar"),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.amber[800],
-                elevation: 1, //elevation of button
-                shape: RoundedRectangleBorder(
-                    //to set border radius to button
-                    borderRadius: BorderRadius.circular(10)),
-                padding: EdgeInsets.all(15),
-              ),
-            ),
-          )
-        ],
       ),
     );
   }

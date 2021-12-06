@@ -1,12 +1,10 @@
 import 'package:app_sagem/http/webclients/schedules.dart';
-import 'package:app_sagem/main.dart';
 import 'package:app_sagem/models/schedules.dart';
 import 'package:app_sagem/screens/dashboard.dart';
-import 'package:app_sagem/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:app_sagem/components/progress.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class Revision extends StatefulWidget {
   final String dateChoice;
@@ -38,12 +36,20 @@ class RevisionState extends State<Revision> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFF6F3EE),
       appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'Revisão',
-          style: Theme.of(context).appBarTheme.titleTextStyle,
-        ),
+        // title: Text(
+        //   'Revisão',
+        //   style: GoogleFonts.dancingScript(
+        //     textStyle: TextStyle(
+        //       color: Color(0xFFCC39191),
+        //       letterSpacing: .5,
+        //       fontSize: 40,
+        //     ),
+        //   ),
+        // ),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -54,7 +60,13 @@ class RevisionState extends State<Revision> {
               child: Center(
                 child: Text(
                   'Você está agendando',
-                  style: TextStyle(fontSize: 30),
+                  style: GoogleFonts.dancingScript(
+                    textStyle: TextStyle(
+                      color: Color(0xFFCC39191),
+                      letterSpacing: .5,
+                      fontSize: 40,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -63,7 +75,13 @@ class RevisionState extends State<Revision> {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               employeeService[0].service,
-              style: TextStyle(fontSize: 20),
+              style: GoogleFonts.dancingScript(
+                textStyle: TextStyle(
+                  color: Color(0xFFCC39191),
+                  letterSpacing: .5,
+                  fontSize: 30,
+                ),
+              ),
             ),
           ),
           Divider(
@@ -169,7 +187,7 @@ class RevisionState extends State<Revision> {
                 },
                 child: Text("Finalizar agendamento"),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.amber[800],
+                  primary: Color(0xFFCC39191),
                   elevation: 1, //elevation of button
                   shape: RoundedRectangleBorder(
                       //to set border radius to button
