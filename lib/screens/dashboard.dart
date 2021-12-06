@@ -1,6 +1,6 @@
 import 'package:app_sagem/screens/home.dart';
 import 'package:app_sagem/screens/profile.dart';
-import 'package:app_sagem/screens/services/home.dart';
+import 'package:app_sagem/screens/services/index.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatefulWidget {

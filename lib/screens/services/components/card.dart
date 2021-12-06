@@ -3,7 +3,7 @@ import 'package:app_sagem/components/progress.dart';
 import 'package:app_sagem/components/title_bottom_sheet.dart';
 import 'package:app_sagem/http/webclients/services.dart';
 import 'package:app_sagem/models/service.dart';
-import 'package:app_sagem/screens/services/service_schedule.dart';
+import 'package:app_sagem/screens/services/components/service_schedule.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

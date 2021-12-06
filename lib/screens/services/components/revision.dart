@@ -38,16 +38,6 @@ class RevisionState extends State<Revision> {
     return Scaffold(
       backgroundColor: Color(0xFFF6F3EE),
       appBar: AppBar(
-        // title: Text(
-        //   'Revisão',
-        //   style: GoogleFonts.dancingScript(
-        //     textStyle: TextStyle(
-        //       color: Color(0xFFCC39191),
-        //       letterSpacing: .5,
-        //       fontSize: 40,
-        //     ),
-        //   ),
-        // ),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
       ),
@@ -190,8 +180,9 @@ class RevisionState extends State<Revision> {
                   primary: Color(0xFFCC39191),
                   elevation: 1, //elevation of button
                   shape: RoundedRectangleBorder(
-                      //to set border radius to button
-                      borderRadius: BorderRadius.circular(10)),
+                    //to set border radius to button
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   padding: EdgeInsets.all(15),
                 ),
               ),

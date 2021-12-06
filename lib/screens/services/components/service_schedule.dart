@@ -3,7 +3,7 @@ import 'package:app_sagem/components/progress.dart';
 import 'package:app_sagem/components/title_bottom_sheet.dart';
 import 'package:app_sagem/http/webclients/schedules.dart';
 import 'package:app_sagem/models/schedules.dart';
-import 'package:app_sagem/screens/services/revision.dart';
+import 'package:app_sagem/screens/services/components/revision.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -243,25 +243,6 @@ class ServiceScheduleState extends State<ServiceSchedule>
                                   textState: null,
                                   function: () => null,
                                 );
-                              // return Center(
-                              //   child: EmptyWidget(
-                              //     image: null,
-                              //     packageImage: PackageImage.Image_1,
-                              //     title: 'Sem datas disponíveis',
-                              //     subTitle:
-                              //         'Informe os dias no calendário acima para pesquisa.',
-                              //     hideBackgroundAnimation: true,
-                              //     titleTextStyle: TextStyle(
-                              //       fontSize: 22,
-                              //       color: Color(0xFFCC39191),
-                              //       fontWeight: FontWeight.w500,
-                              //     ),
-                              //     subtitleTextStyle: TextStyle(
-                              //       fontSize: 14,
-                              //       color: Color(0xFFCC39191),
-                              //     ),
-                              //   ),
-                              // );
                             }
                             return Text('Elaia 2');
                           },
