@@ -1,3 +1,4 @@
+import 'package:app_sagem/components/empty.dart';
 import 'package:app_sagem/components/progress.dart';
 import 'package:app_sagem/components/title_bottom_sheet.dart';
 import 'package:app_sagem/http/webclients/schedules.dart';
@@ -232,25 +233,35 @@ class ServiceScheduleState extends State<ServiceSchedule>
                                     );
                                   }
                                 }
-                                return Center(
-                                  child: EmptyWidget(
-                                    image: null,
-                                    packageImage: PackageImage.Image_1,
-                                    title: 'Sem datas disponíveis',
-                                    subTitle:
-                                        'Informe os dias no calendário acima para pesquisa.',
-                                    hideBackgroundAnimation: true,
-                                    titleTextStyle: TextStyle(
-                                      fontSize: 22,
-                                      color: Color(0xFFCC39191),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    subtitleTextStyle: TextStyle(
-                                      fontSize: 14,
-                                      color: Color(0xFFCC39191),
-                                    ),
-                                  ),
+                                return Empty(
+                                  title: 'Sem datas disponíveis',
+                                  subtitle:
+                                      'Informe os dias no calendário acima para pesquisa.',
+                                  image: PackageImage.Image_1,
+                                  button: false,
+                                  textButton: 'Recarregar',
+                                  textState: null,
+                                  function: () => null,
                                 );
+                              // return Center(
+                              //   child: EmptyWidget(
+                              //     image: null,
+                              //     packageImage: PackageImage.Image_1,
+                              //     title: 'Sem datas disponíveis',
+                              //     subTitle:
+                              //         'Informe os dias no calendário acima para pesquisa.',
+                              //     hideBackgroundAnimation: true,
+                              //     titleTextStyle: TextStyle(
+                              //       fontSize: 22,
+                              //       color: Color(0xFFCC39191),
+                              //       fontWeight: FontWeight.w500,
+                              //     ),
+                              //     subtitleTextStyle: TextStyle(
+                              //       fontSize: 14,
+                              //       color: Color(0xFFCC39191),
+                              //     ),
+                              //   ),
+                              // );
                             }
                             return Text('Elaia 2');
                           },
