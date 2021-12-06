@@ -1,3 +1,4 @@
+import 'package:app_sagem/screens/profile/components/myProfile.dart';
 import 'package:app_sagem/screens/profile/components/mySchedules.dart';
 import 'package:app_sagem/utils/navigator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -55,6 +56,11 @@ class Profile extends StatelessWidget {
                   InkResponse(
                     onTap: () {
                       print('Meus dados');
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => MyProfile(),
+                        ),
+                      );
                     },
                     child: ListTile(
                       leading: Icon(
@@ -67,7 +73,6 @@ class Profile extends StatelessWidget {
                   ),
                   InkResponse(
                     onTap: () {
-                      print('Meus agendamentos');
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => MySchedules(),
