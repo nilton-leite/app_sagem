@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 class CardHome extends StatefulWidget {
   final List<ScheduleHome> scheduleHome;
   final bool isEmpty;
-  final GlobalKey<RefreshIndicatorState> refreshIndicatorKey;
   final String searchText;
   final TextEditingController search;
   final Function(String, int) function;
@@ -18,7 +17,6 @@ class CardHome extends StatefulWidget {
       {Key key,
       this.scheduleHome,
       this.isEmpty,
-      this.refreshIndicatorKey,
       this.searchText,
       this.search,
       this.function})
@@ -29,6 +27,8 @@ class CardHome extends StatefulWidget {
 }
 
 class _CardHomeState extends State<CardHome> {
+  GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
   final SchedulesWebClient _webclient = SchedulesWebClient();
 
   @override
@@ -50,7 +50,7 @@ class _CardHomeState extends State<CardHome> {
               padding: EdgeInsets.all(5),
               width: double.infinity,
               child: RefreshIndicator(
-                  key: widget.refreshIndicatorKey,
+                  key: _refreshIndicatorKey,
                   child: ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),

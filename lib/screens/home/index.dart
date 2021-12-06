@@ -47,49 +47,53 @@ class _IndexHomeState extends State<IndexHome> {
             case ConnectionState.done:
               if (snapshot.hasData) {
                 scheduleHome = snapshot.data;
-                return SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(top: 40, left: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              'Agendamentos',
-                              style: GoogleFonts.dancingScript(
-                                textStyle: TextStyle(
-                                  color: Color(0xFFCC39191),
-                                  letterSpacing: .5,
-                                  fontSize: 40,
-                                ),
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(top: 40, left: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            'Agendamentos',
+                            style: GoogleFonts.dancingScript(
+                              textStyle: TextStyle(
+                                color: Color(0xFFCC39191),
+                                letterSpacing: .5,
+                                fontSize: 40,
                               ),
                             ),
-                          ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                    ),
+                    Search(function: callback),
+                    ServicesHome(function: callback),
+                    Divider(
+                      height: 20,
+                      thickness: 1,
+                      indent: 20,
+                      endIndent: 20,
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Container(
+                          child: CardHome(
+                            scheduleHome: scheduleHome,
+                            searchText: searchText,
+                            isEmpty: scheduleHome.length > 0 ? false : true,
+                            function: callback,
+                          ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                      ),
-                      Search(function: callback),
-                      ServicesHome(function: callback),
-                      Divider(
-                        height: 20,
-                        thickness: 1,
-                        indent: 20,
-                        endIndent: 20,
-                      ),
-                      CardHome(
-                          scheduleHome: scheduleHome,
-                          searchText: searchText,
-                          refreshIndicatorKey: _refreshIndicatorKey,
-                          isEmpty: scheduleHome.length > 0 ? false : true,
-                          function: callback)
-                      // _cardsSchedules(),
-                    ],
-                  ),
+                    ),
+                    // _cardsSchedules(),
+                  ],
                 );
               }
               return Text('Elaia');

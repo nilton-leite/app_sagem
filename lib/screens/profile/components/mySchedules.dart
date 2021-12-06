@@ -34,8 +34,6 @@ class MySchedules extends StatefulWidget {
 class _MySchedulesState extends State<MySchedules> {
   String searchText = '';
   String serviceId = '';
-  GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
 
   final SchedulesWebClient _webclient = SchedulesWebClient();
   List<ScheduleHome> scheduleHome = [];
@@ -81,32 +79,34 @@ class _MySchedulesState extends State<MySchedules> {
             case ConnectionState.done:
               if (snapshot.hasData) {
                 scheduleHome = snapshot.data;
-                return SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                    ),
+                    Search(function: callback),
+                    ServicesHome(function: callback),
+                    Divider(
+                      height: 20,
+                      thickness: 1,
+                      indent: 20,
+                      endIndent: 20,
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Container(
+                          child: CardHome(
+                            scheduleHome: scheduleHome,
+                            searchText: searchText,
+                            isEmpty: scheduleHome.length > 0 ? false : true,
+                            function: callback,
+                          ),
+                        ),
                       ),
-                      Search(function: callback),
-                      ServicesHome(function: callback),
-                      Divider(
-                        height: 20,
-                        thickness: 1,
-                        indent: 20,
-                        endIndent: 20,
-                      ),
-                      CardHome(
-                        scheduleHome: scheduleHome,
-                        searchText: searchText,
-                        // search: _search,
-                        refreshIndicatorKey: _refreshIndicatorKey,
-                        isEmpty: scheduleHome.length > 0 ? false : true,
-                        function: callback,
-                      )
-                      // _cardsSchedules(),
-                    ],
-                  ),
+                    )
+                    // _cardsSchedules(),
+                  ],
                 );
               }
               return Empty(

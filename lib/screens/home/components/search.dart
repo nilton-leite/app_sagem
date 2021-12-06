@@ -17,8 +17,6 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    print('searchText');
-    print(searchText.isNotEmpty);
     return Center(
       child: SizedBox(
         width: 350,
