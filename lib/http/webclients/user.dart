@@ -23,6 +23,32 @@ class UserWebClient {
     throw HttpException(_getMessage(response.statusCode));
   }
 
+  Future<Map<String, dynamic>> save(String fullName, String telephone) async {
+    final String serviceJson = jsonEncode({
+      "full_name": fullName,
+      "telephone": telephone,
+    });
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    final Response response = await client
+        .put(Uri.parse(baseUrl + '/user'),
+            headers: {
+              'Content-type': 'application/json',
+              "Authorization": token
+            },
+            body: serviceJson)
+        .timeout(Duration(seconds: 15));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> decodedJson = jsonDecode(response.body);
+
+      return decodedJson;
+    }
+
+    throw HttpException(_getMessage(response.statusCode));
+  }
+
   String _getMessage(int statusCode) {
     if (_statusCodeResponses.containsKey(statusCode)) {
       return _statusCodeResponses[statusCode];
