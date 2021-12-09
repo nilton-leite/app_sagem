@@ -16,13 +16,12 @@ class IndexHome extends StatefulWidget {
 class _IndexHomeState extends State<IndexHome> {
   String searchText;
   String serviceId;
-  GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
 
   final SchedulesWebClient _webclient = SchedulesWebClient();
   List<ScheduleHome> scheduleHome = [];
 
   callback(newValue, type) {
+    print('AQUI AIMIGO');
     setState(() {
       if (type == 0) searchText = newValue;
       if (type == 1) serviceId = newValue;
@@ -80,16 +79,12 @@ class _IndexHomeState extends State<IndexHome> {
                       indent: 20,
                       endIndent: 20,
                     ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Container(
-                          child: CardHome(
-                            scheduleHome: scheduleHome,
-                            searchText: searchText,
-                            isEmpty: scheduleHome.length > 0 ? false : true,
-                            function: callback,
-                          ),
-                        ),
+                    Container(
+                      child: CardHome(
+                        scheduleHome: scheduleHome,
+                        searchText: searchText,
+                        isEmpty: scheduleHome.length > 0 ? false : true,
+                        function: callback,
                       ),
                     ),
                     // _cardsSchedules(),

@@ -93,16 +93,12 @@ class _MySchedulesState extends State<MySchedules> {
                       indent: 20,
                       endIndent: 20,
                     ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Container(
-                          child: CardHome(
-                            scheduleHome: scheduleHome,
-                            searchText: searchText,
-                            isEmpty: scheduleHome.length > 0 ? false : true,
-                            function: callback,
-                          ),
-                        ),
+                    Container(
+                      child: CardHome(
+                        scheduleHome: scheduleHome,
+                        searchText: searchText,
+                        isEmpty: scheduleHome.length > 0 ? false : true,
+                        function: callback,
                       ),
                     )
                     // _cardsSchedules(),

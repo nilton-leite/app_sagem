@@ -33,7 +33,7 @@ class SchedulesWebClient {
     final Response response = await client.get(
         Uri.parse(baseUrl +
             '/schedulesUser?text=$text&serviceId=$serviceId&cancel=false'),
-        headers: {"Authorization": token}).timeout(Duration(seconds: 5));
+        headers: {"Authorization": token}).timeout(Duration(seconds: 15));
 
     final List<dynamic> decodedJson = jsonDecode(response.body);
 

@@ -42,6 +42,7 @@ dependencies:
   custom_refresh_indicator: ^1.0.0
   empty_widget: ^0.0.3
   accordion: ^2.1.1
+  firebase_messaging:
   flutter_localizations:
     sdk: flutter
   

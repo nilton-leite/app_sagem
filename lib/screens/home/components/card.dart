@@ -53,7 +53,7 @@ class _CardHomeState extends State<CardHome> {
                   key: _refreshIndicatorKey,
                   child: ListView.builder(
                     shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
+                    physics: const AlwaysScrollableScrollPhysics(),
                     itemCount: widget.scheduleHome.length,
                     padding: const EdgeInsets.only(top: 10.0),
                     itemBuilder: (context, index) {
@@ -208,6 +208,6 @@ class _CardHomeState extends State<CardHome> {
   }
 
   Future<void> _refreshCards() async {
-    widget.function(null, 0);
+    return widget.function(null, 0);
   }
 }

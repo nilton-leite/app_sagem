@@ -1,5 +1,6 @@
 import 'package:app_sagem/screens/profile/components/myProfile.dart';
 import 'package:app_sagem/screens/profile/components/mySchedules.dart';
+import 'package:app_sagem/screens/splash.dart';
 import 'package:app_sagem/utils/navigator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,7 +16,15 @@ class Profile extends StatelessWidget {
     prefs.remove('token');
     prefs.remove('name');
     prefs.remove('telephoen');
-    FirebaseAuthAppNavigator.goToLogin(context);
+    final navigator = Navigator.of(context);
+
+    navigator.popUntil((route) => route.isFirst);
+    navigator.pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (context) => HomePage(),
+      ),
+      (route) => false,
+    );
   }
 
   @override
@@ -55,7 +64,6 @@ class Profile extends StatelessWidget {
                 children: <Widget>[
                   InkResponse(
                     onTap: () {
-                      print('Meus dados');
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => MyProfile(),

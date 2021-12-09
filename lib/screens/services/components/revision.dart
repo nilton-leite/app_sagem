@@ -160,8 +160,10 @@ class RevisionState extends State<Revision> {
 
                   if (!isLoading) {
                     final snackBar = SnackBar(
-                        content:
-                            Text('Parabéns! Agendamento feito com sucesso!'));
+                      content:
+                          Text('Parabéns! Agendamento realizado com sucesso!'),
+                      backgroundColor: Color(0xFFCC39191),
+                    );
 
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
