@@ -30,6 +30,7 @@ class BlessState extends State<Bless> {
   void initState() {
     super.initState();
     messaging = FirebaseMessaging.instance;
+
     messaging.getToken().then((value) {
       print(value);
     });

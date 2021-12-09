@@ -1,6 +1,7 @@
 import 'package:app_sagem/http/webclients/login.dart';
 import 'package:app_sagem/utils/color.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:app_sagem/utils/navigator.dart';
@@ -32,12 +33,15 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
     if (username.isNotEmpty || password.isNotEmpty) {
       try {
+        FirebaseMessaging messaging;
+        messaging = FirebaseMessaging.instance;
+        String tokenMessaging = await messaging.getToken();
         UserCredential userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: username, password: password);
 
         if (userCredential.user.uid.isNotEmpty) {
-          Map<String, dynamic> user =
-              await _webclient.login(username, userCredential.user.uid);
+          Map<String, dynamic> user = await _webclient.login(
+              username, userCredential.user.uid, tokenMessaging);
 
           prefs.setString('id', user['id']);
           prefs.setString('token', user['token']);

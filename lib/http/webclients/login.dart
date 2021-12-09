@@ -13,9 +13,13 @@ class LoginWebClient {
     return decodedJson;
   }
 
-  Future<Map<String, dynamic>> login(String email, String tokenFirebase) async {
-    final String serviceJson =
-        jsonEncode({"email": email, "tokenFirebase": tokenFirebase});
+  Future<Map<String, dynamic>> login(
+      String email, String tokenFirebase, String tokenFirebaseMessaging) async {
+    final String serviceJson = jsonEncode({
+      "email": email,
+      "tokenFirebase": tokenFirebase,
+      "tokenFirebaseMessaging": tokenFirebaseMessaging
+    });
 
     final Response response = await client
         .post(Uri.parse(baseUrl + '/login'),
@@ -37,14 +41,16 @@ class LoginWebClient {
       String email,
       String tokenFirebase,
       String tokenFacebook,
-      String tokenGoogle) async {
+      String tokenGoogle,
+      String tokenMessaging) async {
     final String serviceJson = jsonEncode({
       "full_name": fullName,
       "telephone": telephone,
       "email": email,
       "tokenFirebase": tokenFirebase,
       "tokenFacebook": tokenFacebook,
-      "tokenGoogle": tokenGoogle
+      "tokenGoogle": tokenGoogle,
+      "tokenFirebaseMessaging": tokenMessaging
     });
 
     final Response response = await client

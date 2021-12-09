@@ -2,6 +2,7 @@ import 'package:app_sagem/http/webclients/login.dart';
 import 'package:app_sagem/utils/color.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:app_sagem/utils/navigator.dart';
@@ -79,8 +80,19 @@ class _RegisterPageState extends State<RegisterPage>
               .createUserWithEmailAndPassword(
                   email: username, password: password);
 
-          Map<String, dynamic> user = await _webclient.save(name, telephone,
-              username, userCredential.user.uid, 'null', 'null');
+          FirebaseMessaging messaging;
+          messaging = FirebaseMessaging.instance;
+          String tokenMessaging = await messaging.getToken();
+          // tokenMessaging
+
+          Map<String, dynamic> user = await _webclient.save(
+              name,
+              telephone,
+              username,
+              userCredential.user.uid,
+              'null',
+              'null',
+              tokenMessaging);
 
           if (user['_id'] != null) {
             snackBar = SnackBar(
