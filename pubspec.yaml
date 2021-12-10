@@ -43,6 +43,7 @@ dependencies:
   empty_widget: ^0.0.3
   accordion: ^2.1.1
   firebase_messaging:
+  flutter_launcher_icons:
   flutter_localizations:
     sdk: flutter
   
@@ -55,6 +56,14 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  # ios: true
+  android: true
+  # image_path_ios: "images/bless_white.png"
+  image_path: "images/bless_white.png"
+  adaptive_icon_background: "images/background.png"
+  adaptive_icon_foreground: "images/bless_white.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

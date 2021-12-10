@@ -2,8 +2,15 @@
     package="com.example.app_sagem">
     
    <application
-        android:label="app_sagem"
+        android:label="Studio Bless"
         android:icon="@mipmap/ic_launcher">
+
+        <meta-data
+          android:name="com.google.firebase.messaging.default_notification_icon"
+          android:resource="@drawable/ic_stat_bless_white" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorPrimary" />
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

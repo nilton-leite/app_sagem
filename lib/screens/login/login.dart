@@ -138,12 +138,14 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                   child: Form(
                     child: Theme(
                       data: ThemeData(
-                          brightness: Brightness.dark,
-                          primarySwatch:
-                              MaterialColor(0xFFCC39191, color), //Colors.blue,
-                          inputDecorationTheme: InputDecorationTheme(
-                              labelStyle: TextStyle(
-                                  color: Color(0xFFCC39191), fontSize: 20.0))),
+                        brightness: Brightness.dark,
+                        primarySwatch:
+                            MaterialColor(0xFFCC39191, color), //Colors.blue,
+                        inputDecorationTheme: InputDecorationTheme(
+                          labelStyle: TextStyle(
+                              color: Color(0xFFCC39191), fontSize: 20.0),
+                        ),
+                      ),
                       child: Container(
                         padding: const EdgeInsets.all(60.0),
                         child: Column(
