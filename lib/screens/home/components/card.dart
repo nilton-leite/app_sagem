@@ -1,3 +1,4 @@
+import 'package:app_sagem/components/customDialogBox.dart';
 import 'package:app_sagem/components/dynamic_icon.dart';
 import 'package:app_sagem/components/empty.dart';
 import 'package:app_sagem/http/webclients/schedules.dart';
@@ -29,7 +30,9 @@ class CardHome extends StatefulWidget {
 class _CardHomeState extends State<CardHome> {
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
+
   final SchedulesWebClient _webclient = SchedulesWebClient();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -126,68 +129,220 @@ class _CardHomeState extends State<CardHome> {
                                     mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      TextButton(
-                                        child: Text(
-                                          "Cancelar",
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                        style: ButtonStyle(
-                                          padding: MaterialStateProperty.all<
-                                              EdgeInsets>(
-                                            EdgeInsets.all(10),
-                                          ),
-                                          foregroundColor: MaterialStateProperty
-                                              .resolveWith<Color>(
-                                            (Set<MaterialState> states) {
-                                              if (states.contains(
-                                                  MaterialState.pressed))
-                                                return Colors.green;
-                                              else if (states.contains(
-                                                  MaterialState.disabled))
-                                                return Colors.redAccent
-                                                    .withOpacity(0.10);
-                                              return Colors
-                                                  .redAccent; // Use the component's default.
-                                            },
+                                      if (widget.scheduleHome[index].canceled)
+                                        Text(
+                                          'Cancelado',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.redAccent,
                                           ),
                                         ),
-                                        onPressed: !widget
-                                                .scheduleHome[index].cancel
-                                            ? null
-                                            : () async {
-                                                print('Cancelar aqui');
-                                                Map<String, dynamic> cancel =
-                                                    await _webclient.cancel(
-                                                        widget
-                                                            .scheduleHome[index]
-                                                            .id);
-                                                print(cancel);
-
-                                                if (!cancel['status']) {
-                                                  final snackBar = SnackBar(
-                                                    content:
-                                                        Text(cancel['message']),
-                                                    backgroundColor:
-                                                        Colors.redAccent,
-                                                  );
-
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(snackBar);
-                                                } else {
-                                                  final snackBar = SnackBar(
-                                                    content:
-                                                        Text(cancel['message']),
-                                                    backgroundColor:
-                                                        Color(0xFFCC39191),
-                                                  );
-
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(snackBar);
-
-                                                  widget.function(null, 0);
-                                                }
+                                      if (widget.scheduleHome[index].confirmed)
+                                        Text(
+                                          'Confirmado',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                      if (!widget
+                                              .scheduleHome[index].canceled &&
+                                          !widget.scheduleHome[index].confirmed)
+                                        TextButton(
+                                          child: Text(
+                                            "Confirmar",
+                                            style: TextStyle(fontSize: 14),
+                                          ),
+                                          style: ButtonStyle(
+                                            padding: MaterialStateProperty.all<
+                                                EdgeInsets>(
+                                              EdgeInsets.all(10),
+                                            ),
+                                            foregroundColor:
+                                                MaterialStateProperty
+                                                    .resolveWith<Color>(
+                                              (Set<MaterialState> states) {
+                                                if (states.contains(
+                                                    MaterialState.pressed))
+                                                  return Colors.green;
+                                                else if (states.contains(
+                                                    MaterialState.disabled))
+                                                  return Colors.green
+                                                      .withOpacity(0.10);
+                                                return Colors
+                                                    .green; // Use the component's default.
                                               },
-                                      ),
+                                            ),
+                                          ),
+                                          onPressed: () async {
+                                            showDialog(
+                                              context: context,
+                                              builder:
+                                                  (BuildContext contextDialog) {
+                                                return CustomDialogBox(
+                                                  title:
+                                                      "Confirmação de agendamento",
+                                                  descriptions:
+                                                      "Confirma o agendamento para o dia " +
+                                                          widget
+                                                              .scheduleHome[
+                                                                  index]
+                                                              .dataSchedule +
+                                                          ' ás ' +
+                                                          widget
+                                                              .scheduleHome[
+                                                                  index]
+                                                              .time +
+                                                          '?',
+                                                  textConfirm: "Confirmar",
+                                                  textCancel: "Não",
+                                                  function: () async {
+                                                    Map<String, dynamic>
+                                                        confirm =
+                                                        await _webclient
+                                                            .confirm(widget
+                                                                .scheduleHome[
+                                                                    index]
+                                                                .id);
+
+                                                    if (!confirm['status']) {
+                                                      final snackBar = SnackBar(
+                                                        content: Text(
+                                                            confirm['message']),
+                                                        backgroundColor:
+                                                            Colors.redAccent,
+                                                      );
+
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                              snackBar);
+                                                    } else {
+                                                      final snackBar = SnackBar(
+                                                        content: Text(
+                                                            confirm['message']),
+                                                        backgroundColor:
+                                                            Color(0xFFCC39191),
+                                                      );
+
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                              snackBar);
+
+                                                      widget.function(null, 0);
+                                                    }
+                                                  },
+                                                );
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      if (!widget
+                                              .scheduleHome[index].canceled &&
+                                          !widget
+                                              .scheduleHome[index].confirmed &&
+                                          widget.scheduleHome[index].cancel)
+                                        TextButton(
+                                          child: Text(
+                                            "Cancelar",
+                                            style: TextStyle(fontSize: 14),
+                                          ),
+                                          style: ButtonStyle(
+                                            padding: MaterialStateProperty.all<
+                                                EdgeInsets>(
+                                              EdgeInsets.all(10),
+                                            ),
+                                            foregroundColor:
+                                                MaterialStateProperty
+                                                    .resolveWith<Color>(
+                                              (Set<MaterialState> states) {
+                                                if (states.contains(
+                                                    MaterialState.pressed))
+                                                  return Colors.green;
+                                                else if (states.contains(
+                                                    MaterialState.disabled))
+                                                  return Colors.redAccent
+                                                      .withOpacity(0.10);
+                                                return Colors
+                                                    .redAccent; // Use the component's default.
+                                              },
+                                            ),
+                                          ),
+                                          onPressed: !widget
+                                                  .scheduleHome[index].cancel
+                                              ? null
+                                              : () async {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (BuildContext
+                                                        contextDialog) {
+                                                      return CustomDialogBox(
+                                                        title:
+                                                            "Cancelamento de agendamento",
+                                                        descriptions:
+                                                            "Deseja cancelar o agendamento para o dia " +
+                                                                widget
+                                                                    .scheduleHome[
+                                                                        index]
+                                                                    .dataSchedule +
+                                                                ' ás ' +
+                                                                widget
+                                                                    .scheduleHome[
+                                                                        index]
+                                                                    .time +
+                                                                '?',
+                                                        textConfirm: "Cancelar",
+                                                        textCancel: "Não",
+                                                        function: () async {
+                                                          Map<String, dynamic>
+                                                              cancel =
+                                                              await _webclient
+                                                                  .cancel(widget
+                                                                      .scheduleHome[
+                                                                          index]
+                                                                      .id);
+                                                          if (!cancel[
+                                                              'status']) {
+                                                            final snackBar =
+                                                                SnackBar(
+                                                              content: Text(
+                                                                  cancel[
+                                                                      'message']),
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .redAccent,
+                                                            );
+
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                                    snackBar);
+                                                          } else {
+                                                            final snackBar =
+                                                                SnackBar(
+                                                              content: Text(
+                                                                  cancel[
+                                                                      'message']),
+                                                              backgroundColor:
+                                                                  Color(
+                                                                      0xFFCC39191),
+                                                            );
+
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                                    snackBar);
+
+                                                            widget.function(
+                                                                null, 0);
+                                                          }
+                                                        },
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                        ),
                                     ],
                                   ),
                                   title: Text(

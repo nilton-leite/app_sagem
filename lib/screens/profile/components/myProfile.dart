@@ -3,7 +3,6 @@ import 'package:app_sagem/components/progress.dart';
 import 'package:app_sagem/http/webclients/user.dart';
 import 'package:app_sagem/models/user.dart';
 import 'package:app_sagem/utils/color.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';

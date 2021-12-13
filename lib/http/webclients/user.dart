@@ -10,7 +10,7 @@ class UserWebClient {
     final token = prefs.getString('token');
 
     final Response response = await client.get(Uri.parse(baseUrl + '/user'),
-        headers: {"Authorization": token}).timeout(Duration(seconds: 15));
+        headers: {"Authorization": token}).timeout(Duration(seconds: 30));
 
     if (response.statusCode == 200) {
       final List<dynamic> decodedJson = jsonDecode(response.body);
@@ -38,7 +38,7 @@ class UserWebClient {
               "Authorization": token
             },
             body: serviceJson)
-        .timeout(Duration(seconds: 15));
+        .timeout(Duration(seconds: 30));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> decodedJson = jsonDecode(response.body);

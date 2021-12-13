@@ -9,7 +9,7 @@ class ServicesWebClient {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     final Response response = await client.get(Uri.parse(baseUrl + '/services'),
-        headers: {"Authorization": token}).timeout(Duration(seconds: 5));
+        headers: {"Authorization": token}).timeout(Duration(seconds: 30));
 
     final List<dynamic> decodedJson = jsonDecode(response.body);
 

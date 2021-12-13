@@ -33,7 +33,7 @@ class SchedulesWebClient {
     final Response response = await client.get(
         Uri.parse(baseUrl +
             '/schedulesUser?text=$text&serviceId=$serviceId&cancel=false'),
-        headers: {"Authorization": token}).timeout(Duration(seconds: 15));
+        headers: {"Authorization": token}); //.timeout(Duration(seconds: 30));
 
     final List<dynamic> decodedJson = jsonDecode(response.body);
 
@@ -52,7 +52,7 @@ class SchedulesWebClient {
 
     final Response response = await client.get(
         Uri.parse(baseUrl + '/schedulesUser?text=$text&serviceId=$serviceId'),
-        headers: {"Authorization": token}).timeout(Duration(seconds: 5));
+        headers: {"Authorization": token}).timeout(Duration(seconds: 30));
 
     final List<dynamic> decodedJson = jsonDecode(response.body);
 
@@ -81,7 +81,7 @@ class SchedulesWebClient {
               "Authorization": token
             },
             body: serviceJson)
-        .timeout(Duration(seconds: 15));
+        .timeout(Duration(seconds: 30));
 
     if (response.statusCode == 200) {
       return true;
@@ -96,7 +96,24 @@ class SchedulesWebClient {
 
     final Response response = await client.get(
         Uri.parse(baseUrl + '/schedules/cancel?scheduleId=$scheduleId'),
-        headers: {"Authorization": token}).timeout(Duration(seconds: 5));
+        headers: {"Authorization": token}).timeout(Duration(seconds: 30));
+
+    if (response.statusCode == 200 || response.statusCode == 400) {
+      final Map<String, dynamic> decodedJson = jsonDecode(response.body);
+
+      return decodedJson;
+    }
+
+    throw HttpException(_getMessage(response.statusCode));
+  }
+
+  Future<Map<String, dynamic>> confirm(String scheduleId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    final Response response = await client.get(
+        Uri.parse(baseUrl + '/schedules/confirm?scheduleId=$scheduleId'),
+        headers: {"Authorization": token}).timeout(Duration(seconds: 30));
 
     if (response.statusCode == 200 || response.statusCode == 400) {
       final Map<String, dynamic> decodedJson = jsonDecode(response.body);

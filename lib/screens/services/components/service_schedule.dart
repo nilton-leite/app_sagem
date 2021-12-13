@@ -341,8 +341,6 @@ class ServiceScheduleState extends State<ServiceSchedule>
                     ),
                   ),
                 ),
-                // _expandedListDate(
-                //     context, times, setState, employeeId, serviceId),
               ],
             ),
           ),

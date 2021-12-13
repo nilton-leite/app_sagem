@@ -1,4 +1,5 @@
 import 'package:app_sagem/components/dynamic_icon.dart';
+import 'package:app_sagem/components/empty.dart';
 import 'package:app_sagem/components/progress.dart';
 import 'package:app_sagem/components/title_bottom_sheet.dart';
 import 'package:app_sagem/http/webclients/services.dart';
@@ -101,9 +102,23 @@ class _CardServiceState extends State<CardService>
                   );
                 }
               }
-              return Text('Elaia');
+              return Empty(
+                title: 'Ops... Verifique sua conexão com a internet',
+                subtitle: 'Não conseguimos buscar as informações!',
+                image: PackageImage.Image_3,
+                button: false,
+                textButton: '',
+                textState: null,
+              );
           }
-          return Text('Elaia 2');
+          return Empty(
+            title: 'Ops... Verifique sua conexão com a internet',
+            subtitle: 'Não conseguimos buscar as informações!',
+            image: PackageImage.Image_3,
+            button: false,
+            textButton: '',
+            textState: null,
+          );
         },
       ),
     );

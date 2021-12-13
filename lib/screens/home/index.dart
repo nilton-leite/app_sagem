@@ -1,9 +1,13 @@
+import 'package:app_sagem/components/customDialogBox.dart';
+import 'package:app_sagem/components/empty.dart';
 import 'package:app_sagem/components/progress.dart';
 import 'package:app_sagem/http/webclients/schedules.dart';
 import 'package:app_sagem/models/schedules_home.dart';
 import 'package:app_sagem/screens/home/components/card.dart';
 import 'package:app_sagem/screens/home/components/search.dart';
 import 'package:app_sagem/screens/home/components/services.dart';
+import 'package:empty_widget/empty_widget.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,6 +23,7 @@ class _IndexHomeState extends State<IndexHome> {
 
   final SchedulesWebClient _webclient = SchedulesWebClient();
   List<ScheduleHome> scheduleHome = [];
+  FirebaseMessaging messaging;
 
   callback(newValue, type) {
     print('AQUI AIMIGO');
@@ -30,6 +35,30 @@ class _IndexHomeState extends State<IndexHome> {
 
   @override
   Widget build(BuildContext context) {
+    messaging = FirebaseMessaging.instance;
+
+    messaging.getToken().then((value) {
+      print(value);
+    });
+    FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+      showDialog(
+        context: context,
+        builder: (BuildContext contextDialog) {
+          return CustomDialogBox(
+              title: event.notification.title,
+              descriptions: event.notification.body,
+              textConfirm: "Fechar",
+              textCancel: "Não",
+              function: () async {
+                print('Clicado');
+              });
+        },
+      );
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      print('Message clicked!');
+    });
+
     return Scaffold(
       backgroundColor: Color(0xFFF6F3EE),
       body: FutureBuilder<List>(
@@ -91,9 +120,23 @@ class _IndexHomeState extends State<IndexHome> {
                   ],
                 );
               }
-              return Text('Elaia');
+              return Empty(
+                title: 'Ops... Verifique sua conexão com a internet',
+                subtitle: 'Não conseguimos buscar as informações!',
+                image: PackageImage.Image_3,
+                button: false,
+                textButton: '',
+                textState: null,
+              );
           }
-          return Text('Elaia 2');
+          return Empty(
+            title: 'Ops... Verifique sua conexão com a internet',
+            subtitle: 'Não conseguimos buscar as informações!',
+            image: PackageImage.Image_3,
+            button: false,
+            textButton: '',
+            textState: null,
+          );
         },
       ),
     );

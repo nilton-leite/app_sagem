@@ -6,7 +6,7 @@ class LoginWebClient {
   Future<Map<String, dynamic>> validateUser(String email) async {
     final Response response = await client
         .get(Uri.parse(baseUrl + '/user/validate?email=$email'))
-        .timeout(Duration(seconds: 5));
+        .timeout(Duration(seconds: 30));
 
     final Map<String, dynamic> decodedJson = jsonDecode(response.body);
 
@@ -24,7 +24,7 @@ class LoginWebClient {
     final Response response = await client
         .post(Uri.parse(baseUrl + '/login'),
             headers: {'Content-type': 'application/json'}, body: serviceJson)
-        .timeout(Duration(seconds: 15));
+        .timeout(Duration(seconds: 30));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> decodedJson = jsonDecode(response.body);
@@ -56,7 +56,7 @@ class LoginWebClient {
     final Response response = await client
         .post(Uri.parse(baseUrl + '/users'),
             headers: {'Content-type': 'application/json'}, body: serviceJson)
-        .timeout(Duration(seconds: 15));
+        .timeout(Duration(seconds: 30));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> decodedJson = jsonDecode(response.body);

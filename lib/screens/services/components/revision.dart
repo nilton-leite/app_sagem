@@ -171,10 +171,11 @@ class RevisionState extends State<Revision> {
 
                     navigator.popUntil((route) => route.isFirst);
                     navigator.pushAndRemoveUntil(
-                        MaterialPageRoute(
-                          builder: (context) => Dashboard(),
-                        ),
-                        (route) => false);
+                      MaterialPageRoute(
+                        builder: (context) => Dashboard(),
+                      ),
+                      (route) => false,
+                    );
                   }
                 },
                 child: Text("Finalizar agendamento"),

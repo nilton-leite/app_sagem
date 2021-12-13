@@ -1,3 +1,4 @@
+import 'package:app_sagem/components/customDialogBox.dart';
 import 'package:app_sagem/screens/dashboard.dart';
 import 'package:app_sagem/screens/login/login.dart';
 import 'package:app_sagem/screens/login/register.dart';
@@ -25,24 +26,6 @@ class Bless extends StatefulWidget {
 }
 
 class BlessState extends State<Bless> {
-  FirebaseMessaging messaging;
-  @override
-  void initState() {
-    super.initState();
-    messaging = FirebaseMessaging.instance;
-
-    messaging.getToken().then((value) {
-      print(value);
-    });
-    FirebaseMessaging.onMessage.listen((RemoteMessage event) {
-      print("message recieved");
-      print(event.notification.body);
-    });
-    FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      print('Message clicked!');
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     Intl.defaultLocale = 'pt_BR';

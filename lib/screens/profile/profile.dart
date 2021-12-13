@@ -1,7 +1,6 @@
 import 'package:app_sagem/screens/profile/components/myProfile.dart';
 import 'package:app_sagem/screens/profile/components/mySchedules.dart';
 import 'package:app_sagem/screens/splash.dart';
-import 'package:app_sagem/utils/navigator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
