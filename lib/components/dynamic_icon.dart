@@ -9,7 +9,7 @@ class DynamicIcon extends Icon {
     TextDirection textDirection,
   })  : iconName = icon,
         super(
-          IconData(
+          const IconData(
             0,
             fontFamily: 'MaterialIcons',
           ),
