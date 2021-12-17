@@ -51,12 +51,13 @@ jobs:
 
     # - name: Make gradlew executable
     #   run: chmod +x ./gradlew
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
       
     - name: Build with Gradle
       run: ./gradlew build
 
-    - name: Make gradlew executable
-      run: chmod +x ./gradlew
+    
     # Step para Buildar o Projeto e gerar a APK
     # - name: Build Debug 
     #   run: gradle build
