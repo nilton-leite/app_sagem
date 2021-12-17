@@ -41,19 +41,19 @@ class _IndexHomeState extends State<IndexHome> {
       print(value);
     });
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
-      showDialog(
-        context: context,
-        builder: (BuildContext contextDialog) {
-          return CustomDialogBox(
-              title: event.notification.title,
-              descriptions: event.notification.body,
-              textConfirm: "Fechar",
-              textCancel: "Não",
-              function: () async {
-                print('Clicado');
-              });
-        },
-      );
+      print('OIE'); // showDialog(
+      //   context: context,
+      //   builder: (BuildContext contextDialog) {
+      //     return CustomDialogBox(
+      //         title: event.notification.title,
+      //         descriptions: event.notification.body,
+      //         textConfirm: "Fechar",
+      //         textCancel: "Não",
+      //         function: () async {
+      //           Navigator.of(context).pop();
+      //         });
+      //   },
+      // );
     });
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       print('Message clicked!');

@@ -1,3 +1,5 @@
+import 'package:app_sagem/components/customDialogBox.dart';
+import 'package:app_sagem/screens/profile/components/myNotifications.dart';
 import 'package:app_sagem/screens/profile/components/myProfile.dart';
 import 'package:app_sagem/screens/profile/components/mySchedules.dart';
 import 'package:app_sagem/screens/splash.dart';
@@ -95,6 +97,23 @@ class Profile extends StatelessWidget {
                       ),
                     ),
                   ),
+                  InkResponse(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => MyNotifications(),
+                        ),
+                      );
+                    },
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.circle_notifications_rounded,
+                      ),
+                      title: Text(
+                        'Minhas notificações',
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -113,43 +132,16 @@ class Profile extends StatelessWidget {
                       onTap: () {
                         showDialog(
                           context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text("Deseja realmente sair?"),
-                              content: Text("Que pena, mas volte logo hein :)"),
-                              actions: [
-                                ElevatedButton(
-                                  child: Text("Sim"),
-                                  onPressed: () {
-                                    logout(context);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Color(0xFFCC39191),
-                                    elevation: 1, //elevation of button
-                                    shape: RoundedRectangleBorder(
-                                      //to set border radius to button
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    padding: EdgeInsets.all(7),
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  child: Text("Não"),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Color(0xFFCC39191),
-                                    elevation: 1, //elevation of button
-                                    shape: RoundedRectangleBorder(
-                                      //to set border radius to button
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    padding: EdgeInsets.all(7),
-                                  ),
-                                ),
-                              ],
-                            );
+                          builder: (BuildContext contextDialog) {
+                            return CustomDialogBox(
+                                title: "Deseja realmente sair?",
+                                descriptions:
+                                    "Que pena, mas volte logo hein, já estamos com saudade :)",
+                                textConfirm: "Sair",
+                                textCancel: "Não",
+                                function: () async {
+                                  logout(context);
+                                });
                           },
                         );
                       },
