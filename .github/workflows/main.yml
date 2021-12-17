@@ -53,17 +53,13 @@ jobs:
     #   run: chmod +x ./gradlew
     - name: Make gradlew executable
       run: chmod +x ./gradlew
-      
+
     - name: Build with Gradle
       run: ./gradlew build
 
-    
-    # Step para Buildar o Projeto e gerar a APK
-    # - name: Build Debug 
-    #   run: gradle build
     # Step para salvar a APK como Artifact
     - name: Upload APK on Github Artifact
       uses: actions/upload-artifact@v1
       with:
         name: app
-        path: app/build/outputs/apk/prod/debug/app-prod-debug.apk 
+        #path: app/build/outputs/apk/prod/debug/app-prod-debug.apk 
